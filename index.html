@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Aplikacje do nauki matematyki przed egzaminem ósmoklasisty: planimetria — kąty, trójkąty, twierdzenie Pitagorasa, czworokąty, koło i okrąg.">
+<title>Matematyka ósmoklasisty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Spis aplikacji w tym samym zeszycie w kratkę co aplikacje */
+:root{
+  color-scheme:light;
+  --paper:#f5f7fb; --surface:#ffffff; --ink:#1a2132; --muted:#5b6579; --line:#d8dee9; --grid:#e5eaf3;
+  --accent:#1f45c4; --accent-soft:#e3e9fc; --ok:#1b7744; --margin:#f2c4c4;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f131b; --surface:#161b26; --ink:#e6eaf2; --muted:#9ba5b9; --line:#2a3244; --grid:#1b2130;
+    --accent:#86a2ff; --accent-soft:#1d2848; --ok:#5fcb8d; --margin:#4a2629; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f131b; --surface:#161b26; --ink:#e6eaf2; --muted:#9ba5b9; --line:#2a3244; --grid:#1b2130;
+  --accent:#86a2ff; --accent-soft:#1d2848; --ok:#5fcb8d; --margin:#4a2629; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding:max(28px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px))}
+.wrap{max-width:960px;margin:0 auto;display:grid;gap:28px}
+header h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.02;margin:0;letter-spacing:-.015em}
+header p{margin:8px 0 0;color:var(--muted);max-width:58ch;font-size:1.05rem}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:18px}
+.card{position:relative;display:grid;grid-template-rows:auto 1fr;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);
+  transition:border-color .15s, transform .15s, box-shadow .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px -14px rgba(31,69,196,.45)}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.art{position:relative;height:150px;background-color:var(--surface);
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);background-size:22px 22px;background-position:-1px -1px;border-bottom:1px solid var(--line)}
+.art::before{content:"";position:absolute;left:26px;top:0;bottom:0;width:2px;background:var(--margin)}
+.art svg{position:absolute;inset:0;width:100%;height:100%}
+.art .s{stroke:var(--ink);stroke-width:2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.art .f{fill:var(--accent-soft)}
+.art .a{stroke:var(--accent);stroke-width:2.4;fill:none}
+.art .t{stroke:var(--ink);stroke-width:1.4;fill:none}
+.art .d{fill:var(--accent)}
+.art text{font:700 14px var(--f-display);fill:var(--ink)}
+.art text.m{font:500 13px var(--f-mono);fill:var(--accent)}
+.body{padding:18px 20px 20px;display:grid;gap:10px;align-content:start}
+.body h2{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1.1;margin:0}
+.body h2 small{font-family:var(--f-mono);font-weight:500;font-size:.62em;color:var(--accent);margin-left:.45em;white-space:nowrap}
+.body p{margin:0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.75rem;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;margin-top:4px;padding-top:12px;border-top:1px dashed var(--line)}
+.prog{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+.prog b{color:var(--ok)}
+.go{font-weight:700;color:var(--accent)}
+footer{color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Matematyka ósmoklasisty</h1>
+    <p>Aplikacje do przygotowania do egzaminu ósmoklasisty z matematyki. Losowane zadania na trzech poziomach, podpowiedzi i rozwiązania krok po kroku.</p>
+  </header>
+
+  <main class="apps">
+    <a class="card" href="planimetria.html" data-store="planimetria-e8-v1">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet">
+          <!-- dwie przecinające się proste: kąty wierzchołkowe i przyległe -->
+          <line class="s" x1="48" y1="80" x2="192" y2="80"/>
+          <line class="s" x1="62.5" y1="128.2" x2="177.5" y2="31.8"/>
+          <path class="a" d="M142 80 A22 22 0 0 0 136.9 65.9"/>
+          <path class="a" d="M98 80 A22 22 0 0 0 103.1 94.1"/>
+          <path class="t" d="M130.7 71 A14 14 0 0 0 106 80"/>
+          <circle class="d" cx="120" cy="80" r="3.5"/>
+          <text x="148" y="74">α</text><text x="80" y="98">α</text><text x="104" y="56">β</text>
+          <!-- trójkąt prostokątny i twierdzenie Pitagorasa -->
+          <polygon class="f" points="250,118 350,118 250,42"/>
+          <polygon class="s" points="250,118 350,118 250,42"/>
+          <polyline class="t" points="250,107 261,107 261,118"/>
+          <text x="234" y="86">a</text><text x="296" y="138">b</text><text x="304" y="74">c</text>
+          <text class="m" x="268" y="30">a² + b² = c²</text>
+        </svg>
+      </div>
+      <div class="body">
+        <h2>Planimetria <small>∠ △ ○</small></h2>
+        <p>Kąty, trójkąty i twierdzenie Pitagorasa, czworokąty i wielokąty, koło i okrąg. Każde zadanie z rysunkiem, są też zadania typu prawda/fałsz jak na egzaminie.</p>
+        <div class="chips"><span class="chip">kąty</span><span class="chip">trójkąty</span><span class="chip">Pitagoras</span><span class="chip">czworokąty</span><span class="chip">koło i okrąg</span></div>
+        <div class="foot"><span class="prog">Jeszcze nic nie rozwiązano</span><span class="go">Otwórz →</span></div>
+      </div>
+    </a>
+  </main>
+
+  <footer>Postęp zapisuje się tylko w tej przeglądarce, na tym urządzeniu.</footer>
+</div>
+<script>
+document.querySelectorAll('.card[data-store]').forEach(function (card) {
+  try {
+    var s = JSON.parse(localStorage.getItem(card.dataset.store) || 'null');
+    if (!s || !s.cells) return;
+    var ok = 0, all = 0;
+    Object.keys(s.cells).forEach(function (k) { ok += s.cells[k].ok || 0; all += s.cells[k].all || 0; });
+    if (all) card.querySelector('.prog').innerHTML = 'Twoje zadania: ' + all + ' · dobrze za 1. razem: <b>' + ok + '</b>';
+  } catch (e) {}
+});
+</script>
+</body>
+</html>

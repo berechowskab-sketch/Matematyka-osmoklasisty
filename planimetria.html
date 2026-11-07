@@ -1,0 +1,1817 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Trening z planimetrii na egzamin ósmoklasisty: kąty, trójkąty, twierdzenie Pitagorasa, czworokąty, koło i okrąg.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Planimetria ósmoklasisty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Ten sam zeszyt w kratkę co w „Ciągach”: kartka z zadaniem i rysunkiem po lewej, ściąga i postęp po prawej */
+:root{
+  --paper:#f5f7fb; --surface:#ffffff; --ink:#1a2132; --muted:#5b6579; --line:#d8dee9; --grid:#e5eaf3;
+  --accent:#1f45c4; --accent-soft:#e3e9fc; --on-accent:#ffffff; --fig-fill:#eef2fd;
+  --ok:#1b7744; --ok-soft:#e1f3e8; --bad:#c42d2d; --bad-soft:#fbe5e3;
+  --mark:#fff0a0; --mark-ink:#3f3300; --margin:#f2c4c4;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f131b; --surface:#161b26; --ink:#e6eaf2; --muted:#9ba5b9; --line:#2a3244; --grid:#1b2130;
+    --accent:#86a2ff; --accent-soft:#1d2848; --on-accent:#0a0f1e; --fig-fill:#19223a;
+    --ok:#5fcb8d; --ok-soft:#11301f; --bad:#ff8077; --bad-soft:#3a1716;
+    --mark:#4b4212; --mark-ink:#fff2b3; --margin:#4a2629; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f131b; --surface:#161b26; --ink:#e6eaf2; --muted:#9ba5b9; --line:#2a3244; --grid:#1b2130;
+  --accent:#86a2ff; --accent-soft:#1d2848; --on-accent:#0a0f1e; --fig-fill:#19223a;
+  --ok:#5fcb8d; --ok-soft:#11301f; --bad:#ff8077; --bad-soft:#3a1716;
+  --mark:#4b4212; --mark-ink:#fff2b3; --margin:#4a2629; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:grid;gap:20px}
+.back{display:inline-block;font-size:.88rem;color:var(--accent);text-decoration:none;margin-bottom:6px}
+.back:hover{text-decoration:underline}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+.brand h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.brand h1 .seq{color:var(--accent);font-family:var(--f-mono);font-weight:500;font-size:.5em;letter-spacing:.02em;vertical-align:middle;margin-left:.4em;white-space:nowrap}
+.brand p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.tally{display:flex;gap:18px;font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+.tally b{display:block;font-size:1.35rem;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2}
+
+.controls{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+.group{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.group > .lab{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-right:4px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:3px;gap:2px}
+.seg button{font:inherit;font-size:.92rem;border:0;background:transparent;color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button:hover{background:var(--accent-soft)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);font-weight:700}
+@media (max-width:520px){.seg{border-radius:14px}.seg button{border-radius:11px;padding:6px 11px}}
+.lvl-dots{display:inline-flex;gap:2px;margin-right:6px;vertical-align:1px}
+.lvl-dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.25;display:inline-block}
+.lvl-dots i.on{opacity:1}
+
+.main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
+@media (max-width:880px){.main{grid-template-columns:minmax(0,1fr)}}
+
+/* kartka w kratkę */
+.sheet{position:relative;background-color:var(--surface);
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:22px 22px;background-position:-1px -1px;
+  border:1px solid var(--line);border-radius:var(--r);padding:26px 26px 26px 44px;min-width:0;display:grid;gap:18px}
+.sheet::before{content:"";position:absolute;left:28px;top:0;bottom:0;width:2px;background:var(--margin)}
+@media (max-width:520px){.sheet{padding:20px 16px 20px 30px}.sheet::before{left:16px}}
+.eyebrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.8rem;color:var(--muted)}
+.chip{font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:.72rem;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.chip.l1,.chip.l2,.chip.l3{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.prompt{font-size:1.14rem;line-height:1.7;margin:0;max-width:62ch}
+.prompt mjx-container, .steps mjx-container, .fields mjx-container, .choice mjx-container{font-size:105%}
+
+/* rysunek */
+.figbox{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;max-width:460px;width:100%}
+.figbox .cap{font-size:.78rem;color:var(--muted);margin:0 0 2px}
+.fig{display:block;width:100%;height:auto}
+.fig text{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.fig .shape{fill:var(--fig-fill);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.fig .shape.w{fill:var(--surface)}
+.fig .shape.s{fill:var(--accent-soft)}
+.fig .shape.nf{stroke:none}
+.fig .ln{stroke:var(--ink);stroke-width:1.7;fill:none;stroke-linecap:round}
+.fig .ln.d{stroke:var(--muted);stroke-dasharray:5 4;stroke-width:1.4}
+.fig .ln.h{stroke:var(--accent);stroke-width:2.6}
+.fig .ln.l{stroke:var(--muted);stroke-width:1.3}
+.fig .cir{fill:none;stroke:var(--ink);stroke-width:1.8}
+.fig .cir.d{stroke:var(--muted);stroke-dasharray:5 4;stroke-width:1.4}
+.fig .cir.h{stroke:var(--accent);stroke-width:2.2}
+.fig .cir.fs{fill:var(--accent-soft)}
+.fig .cir.fw{fill:var(--surface)}
+.fig .sector{fill:var(--accent-soft);stroke:none}
+.fig .hlarc{fill:none;stroke:var(--accent);stroke-width:4.5;stroke-linecap:round}
+.fig .arcn{fill:none;stroke:var(--ink);stroke-width:2}
+.fig .gr{stroke:var(--line);stroke-width:1}
+.fig .am{fill:none;stroke:var(--ink);stroke-width:1.3}
+.fig .am.h{stroke:var(--accent);stroke-width:1.9}
+.fig .tk{stroke:var(--ink);stroke-width:1.6}
+.fig .dot{fill:var(--ink)}
+.fig .pn{font:700 15px var(--f-display);fill:var(--ink)}
+.fig .lb{font:500 13px var(--f-mono);fill:var(--ink)}
+.fig .lb.h{fill:var(--accent);font-weight:700}
+.fig .lb.a{fill:var(--ok);font-weight:700}
+.fig .ft{font:500 13px var(--f-body);fill:var(--muted)}
+
+.fields{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end}
+.field{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
+.field .flabel{white-space:nowrap}
+.field input{font:inherit;font-family:var(--f-mono);font-size:1.05rem;width:9.5rem;max-width:52vw;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field.ok input{border-color:var(--ok);background:var(--ok-soft)}
+.field.bad input{border-color:var(--bad);background:var(--bad-soft)}
+.field.approx input{border-color:var(--accent);background:var(--accent-soft)}
+.field .unit{color:var(--muted)}
+.field .tick{font-weight:700;width:1em}
+.field.ok .tick{color:var(--ok)} .field.bad .tick{color:var(--bad)} .field.approx .tick{color:var(--accent)}
+.keys{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px}
+.keys .klab{font-size:.8rem;color:var(--muted);margin-right:2px}
+.key{font:700 1rem var(--f-mono);min-width:40px;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer}
+.key:hover{border-color:var(--accent)}
+.choices{display:grid;gap:8px;max-width:520px}
+.choice{font:inherit;text-align:left;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer}
+.choice:hover{border-color:var(--accent)}
+.choice[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.choice.ok{border-color:var(--ok);background:var(--ok-soft)} .choice.bad{border-color:var(--bad);background:var(--bad-soft)}
+.inputhelp{font-size:.82rem;color:var(--muted);margin:10px 0 0}
+.tf{display:grid;gap:8px;max-width:640px}
+.tfrow{display:grid;grid-template-columns:minmax(0,1fr) auto 1.1em;gap:12px;align-items:center;padding:10px 12px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface)}
+.tfrow.ok{border-color:var(--ok);background:var(--ok-soft)}
+.tfrow.bad{border-color:var(--bad);background:var(--bad-soft)}
+.tfb{display:inline-flex;gap:6px}
+.tfbtn{font:700 1rem var(--f-mono);width:44px;padding:7px 0;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);cursor:pointer}
+.tfbtn:hover{border-color:var(--accent)}
+.tfbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.tfbtn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tfrow .tick{font-weight:700;text-align:center}
+.tfrow.ok .tick{color:var(--ok)} .tfrow.bad .tick{color:var(--bad)}
+@media (max-width:520px){.tfrow{gap:8px;padding:10px}}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:.95rem;padding:9px 16px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.next{margin-left:auto}
+@media (max-width:520px){.btn.next{margin-left:0}}
+.btn:focus-visible,.seg button:focus-visible,.choice:focus-visible,.key:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.feedback{border-radius:8px;padding:10px 14px;font-weight:700}
+.feedback.ok{background:var(--ok-soft);color:var(--ok)}
+.feedback.bad{background:var(--bad-soft);color:var(--bad)}
+.feedback.info{background:var(--accent-soft);color:var(--accent)}
+.feedback span{font-weight:400;color:var(--ink)}
+.hints{display:grid;gap:8px}
+.hint{background:var(--mark);color:var(--mark-ink);padding:9px 14px;border-radius:4px 14px 6px 12px;max-width:62ch}
+.hint b{font-family:var(--f-display);margin-right:6px}
+
+.solution{border-top:2px dashed var(--line);padding-top:16px;display:grid;gap:12px}
+.solution h3,.side h2{font-family:var(--f-display);font-weight:700;font-size:1.1rem;margin:0}
+.steps{margin:0;padding-left:1.4em;display:grid;gap:8px;max-width:66ch}
+.steps li::marker{font-family:var(--f-mono);color:var(--accent)}
+.steps li{overflow-x:auto;overflow-y:hidden;min-width:0;max-width:100%}
+.answer{font-weight:700}
+.answer .lab{font-family:var(--f-display);color:var(--ok);margin-right:6px}
+
+.side{display:grid;gap:16px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:10px;min-width:0}
+.formulas{display:grid;gap:12px}
+.formulas h4{margin:0;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.formulas .f{overflow-x:auto;overflow-y:hidden;padding-block:2px;font-size:.95rem}
+.progress{width:100%;border-collapse:collapse;font-size:.88rem}
+.progress th{font-weight:700;text-align:left;color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;padding:4px 4px 6px}
+.progress th.c{text-align:center}
+.progress td{padding:6px 4px;border-top:1px solid var(--line)}
+.progress td.c{text-align:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.cell{display:grid;gap:3px;justify-items:center}
+.bar{width:44px;height:5px;border-radius:3px;background:var(--grid);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.cell.none{color:var(--muted)}
+.reset{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem}
+.linkbtn{font:inherit;font-size:.85rem;background:none;border:0;color:var(--accent);cursor:pointer;padding:2px 0;text-decoration:underline}
+.linkbtn.danger{color:var(--bad)}
+.muted{color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){
+  .sheet.enter{animation:slide .28s ease-out}
+  @keyframes slide{from{transform:translateY(6px);opacity:.4}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <a class="back" href="index.html">← Wszystkie aplikacje</a>
+      <h1>Planimetria ósmoklasisty <span class="seq">a² + b² = c²</span></h1>
+      <p>Losowane zadania z geometrii na egzamin ósmoklasisty, z rysunkami: kąty, trójkąty, twierdzenie Pitagorasa, czworokąty, koło i okrąg. Każde zadanie sprawdzisz od razu, a gdy utkniesz, weźmiesz podpowiedź albo pełne rozwiązanie.</p>
+    </div>
+    <div class="tally" aria-label="Twoje wyniki">
+      <div><b id="t-ok">0</b>dobrze za 1. razem</div>
+      <div><b id="t-all">0</b>zadań</div>
+      <div><b id="t-streak">0</b>seria</div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="group" role="group" aria-label="Dział">
+      <span class="lab">Dział</span>
+      <div class="seg" id="topic-seg">
+        <button type="button" data-topic="K" aria-pressed="true">Kąty</button>
+        <button type="button" data-topic="T" aria-pressed="false">Trójkąty</button>
+        <button type="button" data-topic="P" aria-pressed="false">Pitagoras</button>
+        <button type="button" data-topic="C" aria-pressed="false">Czworokąty</button>
+        <button type="button" data-topic="O" aria-pressed="false">Koło i okrąg</button>
+        <button type="button" data-topic="X" aria-pressed="false">Wszystko naraz</button>
+      </div>
+    </div>
+    <div class="group" role="group" aria-label="Poziom trudności">
+      <span class="lab">Poziom</span>
+      <div class="seg" id="level-seg">
+        <button type="button" data-level="1" aria-pressed="true"><span class="lvl-dots"><i class="on"></i><i></i><i></i></span>Łatwy</button>
+        <button type="button" data-level="2" aria-pressed="false"><span class="lvl-dots"><i class="on"></i><i class="on"></i><i></i></span>Średni</button>
+        <button type="button" data-level="3" aria-pressed="false"><span class="lvl-dots"><i class="on"></i><i class="on"></i><i class="on"></i></span>Trudny</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <article class="sheet" id="sheet" aria-live="polite">
+      <div class="eyebrow" id="eyebrow"></div>
+      <p class="prompt" id="prompt">Ładuję zadanie…</p>
+      <div class="figbox" id="fig" hidden></div>
+      <form id="answer-form" autocomplete="off" novalidate>
+        <div id="answer-area"></div>
+        <div class="actions" style="margin-top:16px">
+          <button class="btn primary" type="submit" id="btn-check">Sprawdź</button>
+          <button class="btn" type="button" id="btn-hint">Podpowiedź</button>
+          <button class="btn" type="button" id="btn-solve">Pokaż rozwiązanie</button>
+          <button class="btn next" type="button" id="btn-next">Następne zadanie →</button>
+        </div>
+      </form>
+      <div id="feedback" hidden></div>
+      <div class="hints" id="hints"></div>
+      <section class="solution" id="solution" hidden>
+        <h3>Rozwiązanie krok po kroku</h3>
+        <ol class="steps" id="steps"></ol>
+        <div class="answer" id="final"></div>
+        <div class="figbox" id="solfig" hidden></div>
+      </section>
+    </article>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>Ściąga</h2>
+        <div class="formulas" id="formulas"></div>
+      </section>
+      <section class="panel">
+        <h2>Twój postęp</h2>
+        <p class="muted" style="margin:0;font-size:.85rem">Zadania rozwiązane dobrze za pierwszym razem / wszystkie zadania.</p>
+        <table class="progress" id="progress"></table>
+        <div class="reset" id="reset-area"><button type="button" class="linkbtn" id="btn-reset">Wyzeruj postęp</button></div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false },
+  startup: {
+    typeset: false,
+    ready: function () {
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function () { if (window.__typesetAll) window.__typesetAll(); });
+    }
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" defer></script>
+
+<script id="engine">
+/* ====== Silnik zadań (bez DOM) ====== */
+const t = String.raw;
+const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const near = (a, b, tol = 1e-9) => Math.abs(a - b) <= tol * Math.max(1, Math.abs(b));
+const gcd = (a, b) => (b ? gcd(b, a % b) : Math.abs(a));
+const isInt = x => Math.abs(x - Math.round(x)) < 1e-9;
+
+function frac(x) { for (let d = 1; d <= 1000; d++) { const p = Math.round(x * d); if (Math.abs(p / d - x) < 1e-9) return [p, d]; } return null; }
+function D(x, dig = 6) { if (Object.is(x, -0)) x = 0; return String(+x.toFixed(dig)).replace('.', '{,}'); }
+function T(x) {
+  if (Object.is(x, -0) || Math.abs(x) < 1e-12) return '0';
+  if (isInt(x)) return N(Math.round(x));
+  const s = +x.toFixed(4);
+  if (Math.abs(s - x) < 1e-12) return D(x);
+  const f = frac(x);
+  if (f) { const [p, d] = f; return (p < 0 ? '-' : '') + t`\frac{${Math.abs(p)}}{${d}}`; }
+  return D(x);
+}
+/* zawsze ułamek zwykły (3/8 zamiast 0,375) */
+function TF(x) { const f = frac(x); if (!f || f[1] === 1) return T(x); return (f[0] < 0 ? '-' : '') + t`\frac{${Math.abs(f[0])}}{${f[1]}}`; }
+/* liczba całkowita z odstępami tysięcy (12 500 → 12\,500) */
+function N(n) { const s = String(Math.abs(n)); const g = s.length > 4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '\\,') : s; return (n < 0 ? '-' : '') + g; }
+const P = x => (x < 0 ? `(${T(x)})` : T(x));
+const M = s => t`\(${s}\)`;
+function txt(x) {
+  if (isInt(x)) { const s = String(Math.round(x)); return (s.length > 4 ? s.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : s).replace('-', '−'); }
+  const s = +x.toFixed(4);
+  if (Math.abs(s - x) < 1e-12) return String(s).replace('.', ',').replace('-', '−');
+  const f = frac(x); if (f) return (f[0] < 0 ? '−' : '') + Math.abs(f[0]) + '/' + f[1];
+  return String(+x.toFixed(6)).replace('.', ',').replace('-', '−');
+}
+const dg = x => `${T(x)}^\\circ`;
+const L = s => `|${s}|`;
+const K = s => t`|\sphericalangle ${s}|`;
+const rad = d => d * Math.PI / 180, sin = d => Math.sin(rad(d)), cos = d => Math.cos(rad(d));
+
+/* ---- liczby postaci k·√n·(π) ---- */
+function R(k, n = 1, pi = 0) {
+  n = Math.round(n);
+  if (n === 0 || k === 0) return { k: 0, n: 1, pi: 0 };
+  for (let i = 2; i * i <= n; i++) while (n % (i * i) === 0) { n /= i * i; k *= i; }
+  return { k: +k.toPrecision(12), n, pi: pi ? 1 : 0 };
+}
+const rv = s => (typeof s === 'number' ? s : s.k * Math.sqrt(s.n) * (s.pi ? Math.PI : 1));
+function rt(s) {
+  if (typeof s === 'number') return T(s);
+  const core = (s.n > 1 ? t`\sqrt{${s.n}}` : '') + (s.pi ? t`\pi` : '');
+  if (!core || s.k === 0) return T(s.k);
+  const sg = s.k < 0 ? '-' : '', f = frac(Math.abs(s.k));
+  if (!f) return sg + D(Math.abs(s.k)) + core;
+  const [p, q] = f, num = (p === 1 ? '' : p) + core;
+  return sg + (q === 1 ? num : t`\frac{${num}}{${q}}`);
+}
+function rx(s) {
+  if (typeof s === 'number') return txt(s);
+  const core = (s.n > 1 ? '√' + s.n : '') + (s.pi ? 'π' : '');
+  if (!core || s.k === 0) return txt(s.k);
+  const sg = s.k < 0 ? '−' : '', f = frac(Math.abs(s.k));
+  if (!f) return sg + txt(Math.abs(s.k)) + core;
+  const [p, q] = f;
+  return sg + (p === 1 ? '' : p) + core + (q === 1 ? '' : '/' + q);
+}
+/* √m w krokach rozwiązania: "\sqrt{48} = 4\sqrt{3}" albo "\sqrt{49} = 7" */
+function sq(m) { const s = R(1, m); return s.k === 1 ? t`\sqrt{${m}}` : t`\sqrt{${m}} = ${rt(s)}`; }
+
+function mk(o) { return Object.assign({ fields: [], choices: null, tf: null, hints: [], steps: [], fig: null, verify: null }, o); }
+const F = (label, ans, extra) => Object.assign({ label, ans: rv(ans), show: rx(ans) }, extra || {});
+const FD = (label, ans) => F(label, ans, { unit: '°' });
+
+/* ---- geometria do rysunków ---- */
+function triAng(al, be, c = 6) { const ga = 180 - al - be, b = c * sin(be) / sin(ga); return { A: [0, 0], B: [c, 0], C: [b * cos(al), b * sin(al)] }; }
+function triSides(a, b, c) { const x = (b * b + c * c - a * a) / (2 * c), y = Math.sqrt(Math.max(0, b * b - x * x)); return { A: [0, 0], B: [c, 0], C: [x, y] }; }
+const rightTri = (a, b) => ({ C: [0, 0], A: [b, 0], B: [0, a] });
+const onC = (c, r, d) => [c[0] + r * cos(d), c[1] + r * sin(d)];
+const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+const lerp = (p, q, s) => [p[0] + (q[0] - p[0]) * s, p[1] + (q[1] - p[1]) * s];
+const add = (p, q) => [p[0] + q[0], p[1] + q[1]];
+function foot(p, a, b) { const dx = b[0] - a[0], dy = b[1] - a[1], s = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy); return [a[0] + s * dx, a[1] + s * dy]; }
+function meet(a, b, c, d) { /* przecięcie prostych AB i CD */
+  const d1 = [b[0] - a[0], b[1] - a[1]], d2 = [d[0] - c[0], d[1] - c[1]], den = d1[0] * d2[1] - d1[1] * d2[0];
+  const s = ((c[0] - a[0]) * d2[1] - (c[1] - a[1]) * d2[0]) / den; return [a[0] + s * d1[0], a[1] + s * d1[1]];
+}
+/* etykieta odcinka: tekst w zadaniu, a w rozwiązaniu odpowiedź */
+const Q = (a, b, ans, o) => Object.assign({ a, b, t: '?', hl: 1, sol: rx(ans) }, o || {});
+const Lb = (a, b, val, o) => Object.assign({ a, b, t: typeof val === 'string' ? val : rx(val) }, o || {});
+
+/* ---- rysunek SVG (czysty tekst, bez DOM) ---- */
+function figSVG(fg, sol) {
+  const W = 440, PAD = 34, HMAX = 290, HMIN = 150, E = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const pts = fg.P || {}, cp = c => (typeof c === 'string' ? pts[c] : c);
+  const xs = [], ys = [];
+  Object.keys(pts).forEach(k => { xs.push(pts[k][0]); ys.push(pts[k][1]); });
+  (fg.circles || []).forEach(c => { const p = cp(c.c); xs.push(p[0] - c.r, p[0] + c.r); ys.push(p[1] - c.r, p[1] + c.r); });
+  if (fg.grid) { xs.push(fg.grid[0], fg.grid[2]); ys.push(fg.grid[1], fg.grid[3]); }
+  /* łuki i wycinki: końce i skrajne punkty (co 90°) też muszą się zmieścić */
+  (fg.sectors || []).concat(fg.arcs || []).forEach(q => {
+    const p = cp(q.c), ang = [q.a1, q.a2];
+    for (let k = Math.ceil(q.a1 / 90) * 90; k < q.a2; k += 90) ang.push(k);
+    ang.forEach(a => { xs.push(p[0] + q.r * cos(a)); ys.push(p[1] + q.r * sin(a)); });
+  });
+  let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const bw = Math.max(x1 - x0, 1e-6), bh = Math.max(y1 - y0, 1e-6);
+  const s = Math.min((W - 2 * PAD) / bw, (HMAX - 2 * PAD) / bh);
+  const H = Math.max(HMIN, Math.round(bh * s + 2 * PAD));
+  const ox = (W - bw * s) / 2, oy = (H - bh * s) / 2;
+  const X = x => ox + (x - x0) * s, Y = y => oy + (y1 - y) * s;
+  const S = p => { const q = cp(p); return [X(q[0]), Y(q[1])]; };
+  const f1 = v => +v.toFixed(1);
+  const lab = o => (sol && o.sol != null ? o.sol : o.t);
+  const cls = o => (sol && o.sol != null ? 'lb a' : (o.hl ? 'lb h' : 'lb'));
+  /* środek ciężkości figur — od niego odsuwamy etykiety */
+  const core = [];
+  (fg.polys || []).forEach(pl => (Array.isArray(pl) ? pl : pl.p).forEach(n => core.push(S(n))));
+  if (!core.length) Object.keys(pts).forEach(k => core.push(S(k)));
+  const C = core.reduce((a, p) => [a[0] + p[0] / core.length, a[1] + p[1] / core.length], [0, 0]);
+  const unit = (dx, dy) => { const l = Math.hypot(dx, dy) || 1; return [dx / l, dy / l]; };
+  let o = '', ex0 = 0, ex1 = W, ey0 = 0, ey1 = H;
+  const txtEl = (x, y, str, c) => {
+    const w = (c === 'pn' ? 9.5 : 7.8) * String(str).length;
+    ex0 = Math.min(ex0, x - w / 2 - 4); ex1 = Math.max(ex1, x + w / 2 + 4); ey0 = Math.min(ey0, y - 11); ey1 = Math.max(ey1, y + 11);
+    return `<text class="${c}" x="${f1(x)}" y="${f1(y)}" text-anchor="middle" dominant-baseline="central">${E(str)}</text>`;
+  };
+  /* wycinki i pierścienie (wypełnienia) */
+  (fg.sectors || []).forEach(q => {
+    const c = S(q.c), r = q.r * s, a = [c[0] + r * cos(q.a1), c[1] - r * sin(q.a1)], b = [c[0] + r * cos(q.a2), c[1] - r * sin(q.a2)];
+    o += `<path class="sector" d="M${f1(c[0])} ${f1(c[1])} L${f1(a[0])} ${f1(a[1])} A${f1(r)} ${f1(r)} 0 ${q.a2 - q.a1 > 180 ? 1 : 0} 0 ${f1(b[0])} ${f1(b[1])} Z"/>`;
+  });
+  if (fg.grid) {
+    const [gx0, gy0, gx1, gy1] = fg.grid;
+    for (let x = gx0; x <= gx1; x++) { const a = S([x, gy0]), b = S([x, gy1]); o += `<line class="gr" x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}"/>`; }
+    for (let y = gy0; y <= gy1; y++) { const a = S([gx0, y]), b = S([gx1, y]); o += `<line class="gr" x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}"/>`; }
+  }
+  const poly = pl => { const list = Array.isArray(pl) ? pl : pl.p, extra = Array.isArray(pl) ? '' : ' ' + (pl.c || ''); return `<polygon class="shape${extra}" points="${list.map(n => S(n).map(f1).join(',')).join(' ')}"/>`; };
+  (fg.polys || []).filter(pl => !pl.top).forEach(pl => { o += poly(pl); });
+  (fg.circles || []).filter(c => c.fill).forEach(c => { const p = S(c.c); o += `<circle class="cir ${c.fill === 's' ? 'fs' : 'fw'}" cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(c.r * s)}" style="stroke:none"/>`; });
+  (fg.polys || []).filter(pl => pl.top).forEach(pl => { o += poly(pl); });
+  (fg.circles || []).forEach(c => { const p = S(c.c); o += `<circle class="cir${c.d ? ' d' : ''}${c.hl ? ' h' : ''}" cx="${f1(p[0])}" cy="${f1(p[1])}" r="${f1(c.r * s)}"/>`; });
+  (fg.arcs || []).forEach(q => {
+    const c = S(q.c), r = q.r * s, a = [c[0] + r * cos(q.a1), c[1] - r * sin(q.a1)], b = [c[0] + r * cos(q.a2), c[1] - r * sin(q.a2)];
+    o += `<path class="${q.n ? 'arcn' : 'hlarc'}" d="M${f1(a[0])} ${f1(a[1])} A${f1(r)} ${f1(r)} 0 ${q.a2 - q.a1 > 180 ? 1 : 0} 0 ${f1(b[0])} ${f1(b[1])}"/>`;
+  });
+  (fg.segs || []).forEach(g => { const a = S(g[0]), b = S(g[1]), fl = g[2] || ''; if (fl.includes('s') && !sol) return; o += `<line class="ln${fl.includes('d') ? ' d' : ''}${fl.includes('h') ? ' h' : ''}${fl.includes('l') ? ' l' : ''}" x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}"/>`; });
+  /* kreski równych odcinków */
+  (fg.ticks || []).forEach(g => {
+    const a = S(g[0]), b = S(g[1]), m = mid(a, b), d = unit(b[0] - a[0], b[1] - a[1]), n = [-d[1], d[0]], k = g[2] || 1;
+    for (let i = 0; i < k; i++) { const off = (i - (k - 1) / 2) * 5, c = [m[0] + d[0] * off, m[1] + d[1] * off]; o += `<line class="tk" x1="${f1(c[0] - n[0] * 6)}" y1="${f1(c[1] - n[1] * 6)}" x2="${f1(c[0] + n[0] * 6)}" y2="${f1(c[1] + n[1] * 6)}"/>`; }
+  });
+  /* strzałki równoległości */
+  (fg.par || []).forEach(g => {
+    const a = S(g[0]), b = S(g[1]), m = lerp(a, b, g[2] || 0.5), d = unit(b[0] - a[0], b[1] - a[1]), n = [-d[1], d[0]];
+    o += `<polyline class="am" style="stroke-width:1.6" points="${f1(m[0] - d[0] * 5 + n[0] * 5)},${f1(m[1] - d[1] * 5 + n[1] * 5)} ${f1(m[0] + d[0] * 2)},${f1(m[1] + d[1] * 2)} ${f1(m[0] - d[0] * 5 - n[0] * 5)},${f1(m[1] - d[1] * 5 - n[1] * 5)}"/>`;
+  });
+  /* kąty */
+  let angLabels = '';
+  (fg.angs || []).forEach(g => {
+    if (g.so && !sol) return;
+    const v = S(g.v), a = S(g.a), b = S(g.b);
+    const t1 = Math.atan2(a[1] - v[1], a[0] - v[0]); let dl = Math.atan2(b[1] - v[1], b[0] - v[0]) - t1;
+    while (dl > Math.PI) dl -= 2 * Math.PI; while (dl <= -Math.PI) dl += 2 * Math.PI;
+    const deg = Math.abs(dl) * 180 / Math.PI, maxR = 0.42 * Math.min(Math.hypot(a[0] - v[0], a[1] - v[1]), Math.hypot(b[0] - v[0], b[1] - v[1]));
+    let r = g.r || (deg < 30 ? 36 : deg < 55 ? 27 : 20); r = Math.max(12, Math.min(r, maxR));
+    const u1 = [Math.cos(t1), Math.sin(t1)], u2 = [Math.cos(t1 + dl), Math.sin(t1 + dl)];
+    const c = (sol && g.sol != null) ? 'am' : (g.hl ? 'am h' : 'am');
+    if (g.right) {
+      const q = 11; o += `<polyline class="${c}" points="${f1(v[0] + u1[0] * q)},${f1(v[1] + u1[1] * q)} ${f1(v[0] + (u1[0] + u2[0]) * q)},${f1(v[1] + (u1[1] + u2[1]) * q)} ${f1(v[0] + u2[0] * q)},${f1(v[1] + u2[1] * q)}"/>`;
+    } else {
+      o += `<path class="${c}" d="M${f1(v[0] + u1[0] * r)} ${f1(v[1] + u1[1] * r)} A${f1(r)} ${f1(r)} 0 0 ${dl > 0 ? 1 : 0} ${f1(v[0] + u2[0] * r)} ${f1(v[1] + u2[1] * r)}"/>`;
+    }
+    const tx = lab(g); if (tx == null || tx === '') return;
+    const tm = t1 + dl * (g.at == null ? 0.5 : g.at), w = 7.4 * String(tx).length, dist = (g.right ? 16 : r) + 8 + (deg < 40 ? w * 0.35 : w * 0.25) + (g.out || 0);
+    angLabels += txtEl(v[0] + Math.cos(tm) * dist, v[1] + Math.sin(tm) * dist, tx, cls(g));
+  });
+  (fg.dots || []).forEach(n => { if (n && n.p) { if (n.so && !sol) return; n = n.p; } const p = S(n); o += `<circle class="dot" cx="${f1(p[0])}" cy="${f1(p[1])}" r="3.2"/>`; });
+  /* etykiety długości */
+  (fg.lens || []).forEach(g => {
+    if (g.so && !sol) return;
+    const a = S(g.a), b = S(g.b), m = lerp(a, b, g.at == null ? 0.5 : g.at), d = unit(b[0] - a[0], b[1] - a[1]);
+    let n = [-d[1], d[0]];
+    if (g.s) n = [n[0] * g.s, n[1] * g.s];
+    else if ((m[0] - C[0]) * n[0] + (m[1] - C[1]) * n[1] < 0) n = [-n[0], -n[1]];
+    const tx = lab(g), w = 7.6 * String(tx).length + 4, off = 7 + Math.abs(n[0]) * w / 2 + Math.abs(n[1]) * 8;
+    o += txtEl(m[0] + n[0] * off, m[1] + n[1] * off, tx, cls(g));
+  });
+  o += angLabels;
+  (fg.txt || []).forEach(g => { if (g.so && !sol) return; const p = S(g.p); o += txtEl(p[0], p[1], lab(g), sol && g.sol != null ? 'lb a' : (g.c || 'ft')); });
+  /* nazwy punktów */
+  const hide = fg.hide || [];
+  Object.keys(pts).forEach(k => {
+    if (k[0] === '_' || hide.includes(k)) return;
+    const p = S(k), pos = fg.pos && fg.pos[k];
+    let u = pos ? unit(pos[0], -pos[1]) : unit(p[0] - C[0], p[1] - C[1]);
+    if (!pos && Math.hypot(p[0] - C[0], p[1] - C[1]) < 4) u = unit(0.8, 0.9);
+    o += txtEl(p[0] + u[0] * 14, p[1] + u[1] * 14, k, 'pn');
+  });
+  const vw = ex1 - ex0, vh = ey1 - ey0;
+  return `<svg class="fig" viewBox="${f1(ex0)} ${f1(ey0)} ${f1(vw)} ${f1(vh)}" width="${Math.round(vw)}" height="${Math.round(vh)}" role="img" aria-label="Rysunek pomocniczy do zadania">` + o + '</svg>';
+}
+
+const TRIPLES = [[3, 4, 5], [6, 8, 10], [9, 12, 15], [12, 16, 20], [5, 12, 13], [10, 24, 26], [8, 15, 17], [7, 24, 25], [20, 21, 29], [15, 20, 25]];
+const legs = tr => (Math.random() < 0.5 ? [tr[0], tr[1], tr[2]] : [tr[1], tr[0], tr[2]]);
+const RIGHT_C = t`W trójkącie prostokątnym ${M('ABC')} kąt przy wierzchołku ${M('C')} jest prosty`;
+/* trójkąt prostokątny: kąt prosty przy C, |BC| = a (pion), |AC| = b (poziom) */
+function rtFig(a, b, lens, angs, more) {
+  return Object.assign({ P: rightTri(a, b), polys: [['A', 'B', 'C']], lens: lens || [], angs: [{ v: 'C', a: 'A', b: 'B', right: 1 }].concat(angs || []) }, more || {});
+}
+
+/* ---------- Pomocnicze (klasa 8) ---------- */
+const O0 = [0, 0];
+const UN = (x, u) => M((typeof x === 'number' ? T(x) : x) + (u.endsWith('²') ? t`\ \text{${u.slice(0, -1)}}^2` : t`\ \text{${u}}`));
+const FU = (label, ans, unit) => F(label, ans, { unit });
+/* π ≈ 3,14 — dokładny wynik z π też jest dobry */
+const FPI = (label, k, unit) => { const a = +(k * 3.14).toFixed(6); return { label, ans: a, show: txt(a), alt: [k * Math.PI], pi: k * Math.PI, unit }; };
+/* wynik złożony, np. 10 + 5π */
+const FX = (label, value, show, unit) => ({ label, ans: value, show, unit });
+const nx = c => (c === 1 ? 'x' : c + 'x');
+const czesci = n => (n === 1 ? 'jest 1 część' : n <= 4 ? `są ${n} części` : `jest ${n} części`);
+const PF = 'Oceń prawdziwość podanych zdań. Wybierz P, jeśli zdanie jest prawdziwe, albo F, jeśli jest fałszywe.';
+const tfSteps = items => items.map(i => `<b>${i.v ? 'Prawda' : 'Fałsz'}.</b> ${i.why}`);
+const tfAnswer = items => items.map((i, k) => `${k + 1}. ${i.v ? 'P' : 'F'}`).join(', ');
+function clockFig(h, m, more) {
+  const P0 = { _S: O0 }, segs = [], txts = [];
+  for (let i = 0; i < 12; i++) {
+    const a = 90 - 30 * i;
+    P0['_a' + i] = onC(O0, 4, a); P0['_b' + i] = onC(O0, i % 3 ? 3.7 : 3.45, a);
+    segs.push(['_a' + i, '_b' + i, i % 3 ? 'l' : '']);
+  }
+  [12, 3, 6, 9].forEach((n, j) => { P0['_n' + n] = onC(O0, 3.05, 90 - 90 * j); txts.push({ p: '_n' + n, t: String(n), c: 'ft' }); });
+  P0._H = onC(O0, 1.8, 90 - (30 * (h % 12) + m / 2)); P0._M = onC(O0, 2.6, 90 - 6 * m);
+  segs.push(['_S', '_H', 'h'], ['_S', '_M', 'h']);
+  return Object.assign({ P: P0, circles: [{ c: '_S', r: 4 }], segs, txt: txts, dots: ['_S'] }, more || {});
+}
+
+/* ---------- KĄTY ---------- */
+const GK = {
+1: [
+  function adjacent() {
+    if (Math.random() < 0.65) {
+      let x; do { x = ri(25, 155); } while (Math.abs(x - 90) < 8);
+      return mk({ skill: 'kąty przyległe',
+        text: t`Kąty ${M('AOC')} i ${M('COB')} są przyległe (jak na rysunku). Kąt ${M('AOC')} ma miarę ${M(dg(x))}. Oblicz miarę kąta ${M('COB')}.`,
+        fields: [FD(M(K('COB') + ' ='), 180 - x)],
+        hints: [t`Kąty przyległe mają jedno ramię wspólne, a ich pozostałe ramiona tworzą prostą. Razem mają ${M(dg(180))}.`],
+        steps: [M(t`${K('COB')} = 180^\circ - ${dg(x)} = ${dg(180 - x)}`)],
+        answer: M(`${K('COB')} = ${dg(180 - x)}`),
+        fig: { P: { A: [-4, 0], O: O0, B: [4, 0], C: onC(O0, 3.6, 180 - x) }, segs: [['A', 'B'], ['O', 'C']], dots: ['O'], pos: { O: [0, -1] },
+          angs: [{ v: 'O', a: 'C', b: 'A', t: x + '°' }, { v: 'O', a: 'B', b: 'C', t: '?', hl: 1, sol: (180 - x) + '°' }] } });
+    }
+    const half = ri(14, 80), x = 2 * half, askHalf = Math.random() < 0.6;
+    return mk({ skill: 'dwusieczna kąta',
+      text: askHalf ? t`Półprosta ${M('OC')} jest dwusieczną kąta ${M('AOB')} o mierze ${M(dg(x))}. Oblicz miarę kąta ${M('AOC')}.`
+        : t`Półprosta ${M('OC')} jest dwusieczną kąta ${M('AOB')}. Kąt ${M('AOC')} ma miarę ${M(dg(half))}. Oblicz miarę kąta ${M('AOB')}.`,
+      fields: [askHalf ? FD(M(K('AOC') + ' ='), half) : FD(M(K('AOB') + ' ='), x)],
+      hints: [t`Dwusieczna dzieli kąt na dwa kąty o równych miarach.`],
+      steps: [askHalf ? M(t`${K('AOC')} = ${dg(x)} : 2 = ${dg(half)}`) : M(t`${K('AOB')} = 2\cdot ${dg(half)} = ${dg(x)}`)],
+      answer: askHalf ? M(`${K('AOC')} = ${dg(half)}`) : M(`${K('AOB')} = ${dg(x)}`),
+      fig: { P: { O: O0, A: [4, 0], B: onC(O0, 4, x), C: onC(O0, 3.4, half) }, segs: [['O', 'A'], ['O', 'B'], ['O', 'C', 'h']], dots: ['O'], pos: { O: [-1, -0.6] },
+        angs: [{ v: 'O', a: 'A', b: 'C', r: 30, t: askHalf ? '?' : half + '°', hl: askHalf ? 1 : 0, sol: askHalf ? half + '°' : null }, { v: 'O', a: 'C', b: 'B', r: 30, t: '' },
+          { v: 'O', a: 'A', b: 'B', r: 62, at: 0.75, t: askHalf ? x + '°' : '?', hl: askHalf ? 0 : 1, sol: askHalf ? null : x + '°' }] } });
+  },
+  function vertical() {
+    let x; do { x = ri(25, 155); } while (Math.abs(x - 90) < 10);
+    return mk({ skill: 'kąty wierzchołkowe i przyległe',
+      text: t`Dwie proste przecinają się w jednym punkcie (jak na rysunku). Jeden z kątów, które tworzą, ma miarę ${M(t`\alpha = ${dg(x)}`)}. Oblicz miary kątów ${M(t`\beta`)}, ${M(t`\gamma`)} i ${M(t`\delta`)}.`,
+      fields: [FD(M(t`\beta =`), 180 - x), FD(M(t`\gamma =`), x), FD(M(t`\delta =`), 180 - x)],
+      hints: [t`Kąty wierzchołkowe (leżące naprzeciw siebie) mają równe miary.`, t`Kąty przyległe (leżące obok siebie przy jednej prostej) mają razem ${M(dg(180))}.`],
+      steps: [t`${M(t`\beta`)} jest przyległy do ${M(t`\alpha`)}: ${M(t`\beta = 180^\circ - ${dg(x)} = ${dg(180 - x)}`)}.`, t`${M(t`\gamma`)} jest wierzchołkowy do ${M(t`\alpha`)}: ${M(t`\gamma = \alpha = ${dg(x)}`)}.`, t`${M(t`\delta`)} jest wierzchołkowy do ${M(t`\beta`)}: ${M(t`\delta = \beta = ${dg(180 - x)}`)}.`],
+      answer: M(t`\beta = ${dg(180 - x)},\ \gamma = ${dg(x)},\ \delta = ${dg(180 - x)}`),
+      fig: { P: { _A: [-4, 0], _B: [4, 0], _O: O0, _C: onC(O0, 4, x), _D: onC(O0, 4, x + 180) }, segs: [['_A', '_B'], ['_C', '_D']], dots: ['_O'],
+        angs: [{ v: '_O', a: '_B', b: '_C', r: 26, t: 'α = ' + x + '°' }, { v: '_O', a: '_C', b: '_A', r: 26, t: 'β', hl: 1, sol: (180 - x) + '°' }, { v: '_O', a: '_A', b: '_D', r: 26, t: 'γ', hl: 1, sol: x + '°' }, { v: '_O', a: '_D', b: '_B', r: 26, t: 'δ', hl: 1, sol: (180 - x) + '°' }] } });
+  },
+  function angleKinds() {
+    const KINDS = [['ostrym', x => x < 90], ['prostym', x => x === 90], ['rozwartym', x => x > 90 && x < 180], ['półpełnym', x => x === 180], ['wklęsłym', x => x > 180]];
+    const RANGE = { ostrym: t`mniejszy od ${M(dg(90))}`, prostym: t`równy ${M(dg(90))}`, rozwartym: t`większy od ${M(dg(90))} i mniejszy od ${M(dg(180))}`, półpełnym: t`równy ${M(dg(180))}`, wklęsłym: t`większy od ${M(dg(180))}` };
+    const st = () => {
+      const x = pick([ri(5, 85), 90, ri(95, 175), 180, ri(185, 355)]), v = Math.random() < 0.5, right = KINDS.find(k => k[1](x))[0];
+      const name = v ? right : pick(KINDS.map(k => k[0]).filter(n => n !== right));
+      return { s: t`Kąt o mierze ${M(dg(x))} jest kątem ${name}.`, v, why: t`Kąt o mierze ${M(dg(x))} jest kątem ${right}, bo jest ${RANGE[right]}.` };
+    };
+    const FACTS = [
+      { s: 'Kąt przyległy do kąta ostrego jest kątem rozwartym.', v: true, why: t`Razem mają ${M(dg(180))}, więc gdy jeden jest mniejszy od ${M(dg(90))}, drugi jest większy od ${M(dg(90))}.` },
+      { s: 'Kąt wierzchołkowy do kąta rozwartego jest kątem ostrym.', v: false, why: 'Kąty wierzchołkowe mają równe miary, więc kąt wierzchołkowy do rozwartego też jest rozwarty.' },
+      { s: 'Kąt przyległy do kąta prostego jest kątem prostym.', v: true, why: M(t`180^\circ - 90^\circ = 90^\circ`) + '.' },
+      { s: 'Dwa kąty ostre mogą być kątami przyległymi.', v: false, why: t`Suma dwóch kątów ostrych jest mniejsza od ${M(dg(180))}, a kąty przyległe mają razem ${M(dg(180))}.` },
+      { s: 'Kąty wierzchołkowe mają równe miary.', v: true, why: t`Oba są przyległe do tego samego kąta, więc każdy ma ${M(dg(180))} minus ten kąt.` },
+      { s: t`Suma miar dwóch kątów przyległych jest równa ${M(dg(360))}.`, v: false, why: t`Kąty przyległe tworzą razem kąt półpełny, czyli ${M(dg(180))}.` },
+      { s: t`Dwusieczna kąta prostego dzieli go na dwa kąty o mierze ${M(dg(45))}.`, v: true, why: M(t`90^\circ : 2 = 45^\circ`) + '.' },
+      { s: t`Kąt pełny ma miarę ${M(dg(180))}.`, v: false, why: t`Kąt pełny ma ${M(dg(360))}, a ${M(dg(180))} ma kąt półpełny.` }
+    ];
+    const items = Math.random() < 0.5 ? [st(), pick(FACTS)] : [pick(FACTS), st()];
+    return mk({ skill: 'rodzaje kątów', text: PF, tf: items.map(i => ({ s: i.s, v: i.v })),
+      hints: [t`Kąt ostry jest mniejszy od ${M(dg(90))}, prosty ma ${M(dg(90))}, rozwarty jest między ${M(dg(90))} a ${M(dg(180))}, półpełny ma ${M(dg(180))}, a wklęsły jest większy od ${M(dg(180))}.`, t`Kąty przyległe mają razem ${M(dg(180))}, a kąty wierzchołkowe są równe.`],
+      steps: tfSteps(items), answer: tfAnswer(items) });
+  },
+  function clockFull() {
+    const h = ri(1, 11), parts = Math.min(h, 12 - h), ang = 30 * parts;
+    return mk({ skill: 'kąty na zegarze',
+      text: t`Jaki kąt tworzą wskazówki zegara o godzinie ${M(`${h}{:}00`)}? Podaj miarę mniejszego z kątów między wskazówkami.`,
+      fields: [FD('kąt:', ang)],
+      hints: [t`Tarcza zegara to kąt pełny ${M(dg(360))} podzielony na 12 równych części.`, t`Między sąsiednimi liczbami na tarczy jest ${M(t`360^\circ : 12 = 30^\circ`)}.`],
+      steps: [M(t`360^\circ : 12 = 30^\circ`), t`O godzinie ${M(`${h}{:}00`)} wskazówka minutowa pokazuje 12, a godzinowa ${M(h)}. Między nimi ${czesci(parts)} tarczy: ${M(t`${parts}\cdot 30^\circ = ${dg(ang)}`)}.`],
+      answer: t`Kąt ma ${M(dg(ang))}.`,
+      fig: clockFig(h, 0, { angs: [{ v: '_S', a: '_M', b: '_H', t: '?', hl: 1, sol: ang + '°' }] }) });
+  }
+],
+2: [
+  function parallelLines() {
+    let phi; do { phi = 5 * ri(7, 29); } while (Math.abs(phi - 90) < 12);
+    const hh = 2.6, d = [cos(phi), sin(phi)], P1 = [d[0] * hh / d[1], hh];
+    const xl = Math.min(P1[0], 0) - 3.4, xr = Math.max(P1[0], 0) + 3.4;
+    const P0 = { _P1: P1, _P2: O0, _k1: [xl, hh], _k2: [xr, hh], _l1: [xl, 0], _l2: [xr, 0], _U: add(P1, [d[0] * 1.7, d[1] * 1.7]), _D: [-d[0] * 1.7, -d[1] * 1.7], _tk: [xr + 0.45, hh], _tl: [xr + 0.45, 0] };
+    P0._tm = add(P0._U, [d[0] * 0.45, d[1] * 0.45]);
+    const OPP = { UR: 'LL', LL: 'UR', UL: 'LR', LR: 'UL' }, val = p => (p === 'UR' || p === 'LL' ? phi : 180 - phi);
+    const RAYS = { 1: { R: '_k2', L: '_k1', U: '_U', D: '_P2', v: '_P1' }, 2: { R: '_l2', L: '_l1', U: '_P1', D: '_D', v: '_P2' } };
+    const arc = (n, p, o) => { const r = RAYS[n], ab = { UR: [r.R, r.U], UL: [r.U, r.L], LL: [r.L, r.D], LR: [r.D, r.R] }[p]; return Object.assign({ v: r.v, a: ab[0], b: ab[1] }, o); };
+    const POS = ['UR', 'UL', 'LL', 'LR'], p0 = pick(POS), X = val(p0), qa = [2, pick(POS)];
+    let qb; do { qb = [pick([1, 2]), pick(POS)]; } while ((qb[0] === 1 && qb[1] === p0) || (qb[0] === qa[0] && qb[1] === qa[1]));
+    const LB = ['α', 'β'], TX = [t`\alpha`, t`\beta`], Q2 = [qa, qb];
+    const why = (q, i) => {
+      const [n, p] = q, nm = TX[i], v = val(p);
+      if (n === 1) return p === OPP[p0] ? t`${M(nm)} i dany kąt są wierzchołkowe, więc ${M(`${nm} = ${dg(X)}`)}.` : t`${M(nm)} i dany kąt są przyległe, więc ${M(t`${nm} = 180^\circ - ${dg(X)} = ${dg(v)}`)}.`;
+      if (p === p0) return t`${M(nm)} i dany kąt są odpowiadające, więc ${M(`${nm} = ${dg(X)}`)}.`;
+      if (p === OPP[p0]) return t`${M(nm)} i dany kąt są naprzemianległe, więc ${M(`${nm} = ${dg(X)}`)}.`;
+      return t`${M(nm)} jest przyległy do kąta odpowiadającego danemu (ten też ma ${M(dg(X))}), więc ${M(t`${nm} = 180^\circ - ${dg(X)} = ${dg(v)}`)}.`;
+    };
+    return mk({ skill: 'proste równoległe i kąty',
+      text: t`Proste ${M('k')} i ${M('l')} są równoległe, a prosta ${M('m')} je przecina (jak na rysunku). Jeden z kątów ma miarę ${M(dg(X))}. Oblicz miary kątów ${M(t`\alpha`)} i ${M(t`\beta`)}.`,
+      fields: Q2.map((q, i) => FD(M(TX[i] + ' ='), val(q[1]))),
+      hints: [t`Kąty odpowiadające (w tym samym położeniu przy każdej z prostych równoległych) mają równe miary. Kąty naprzemianległe („na ukos”, po przeciwnych stronach prostej ${M('m')}) też.`, t`Kąty przyległe mają razem ${M(dg(180))}, a kąty wierzchołkowe są równe.`],
+      steps: Q2.map(why), answer: M(Q2.map((q, i) => `${TX[i]} = ${dg(val(q[1]))}`).join(',\\quad ')),
+      fig: { P: P0, segs: [['_k1', '_k2'], ['_l1', '_l2'], ['_D', '_U']], par: [['_k1', '_k2', 0.12], ['_l1', '_l2', 0.12]],
+        txt: [{ p: '_tk', t: 'k', c: 'pn' }, { p: '_tl', t: 'l', c: 'pn' }, { p: '_tm', t: 'm', c: 'pn' }],
+        angs: [arc(1, p0, { t: X + '°' })].concat(Q2.map((q, i) => arc(q[0], q[1], { t: LB[i], hl: 1, sol: val(q[1]) + '°' }))) } });
+  },
+  function adjacentRatio() {
+    let al, ob, text, hints, steps;
+    if (Math.random() < 0.5) {
+      const d = 2 * ri(5, 60); al = (180 - d) / 2; ob = al + d;
+      text = t`Jeden z dwóch kątów przyległych jest o ${M(dg(d))} większy od drugiego. Oblicz miary tych kątów.`;
+      hints = [t`Kąty przyległe mają razem ${M(dg(180))}.`, t`Oznacz mniejszy kąt przez ${M('x')}. Wtedy większy ma ${M(`x + ${dg(d)}`)}.`];
+      steps = [M(t`x + x + ${dg(d)} = 180^\circ`), M(t`2x = ${dg(180 - d)} \;\Rightarrow\; x = ${dg(al)}`), t`Większy kąt: ${M(`${dg(al)} + ${dg(d)} = ${dg(ob)}`)}.`];
+    } else {
+      const k = pick([2, 3, 4, 5, 8, 9, 11]), w = { 2: 'dwa', 3: 'trzy', 4: 'cztery', 5: 'pięć', 8: 'osiem', 9: 'dziewięć', 11: 'jedenaście' }[k];
+      al = 180 / (k + 1); ob = 180 - al;
+      text = t`Jeden z dwóch kątów przyległych jest ${w} razy większy od drugiego. Oblicz miary tych kątów.`;
+      hints = [t`Kąty przyległe mają razem ${M(dg(180))}.`, t`Oznacz mniejszy kąt przez ${M('x')}. Wtedy większy ma ${M(`${k}x`)}.`];
+      steps = [M(t`x + ${k}x = 180^\circ \;\Rightarrow\; ${k + 1}x = 180^\circ \;\Rightarrow\; x = ${dg(al)}`), t`Większy kąt: ${M(t`${k}\cdot ${dg(al)} = ${dg(ob)}`)}.`];
+    }
+    return mk({ skill: 'kąty przyległe i równanie', text, hints, steps,
+      fields: [FD('mniejszy kąt:', al), FD('większy kąt:', ob)], answer: t`Kąty mają miary ${M(dg(al))} i ${M(dg(ob))}.`,
+      fig: { P: { _A: [-4, 0], _O: O0, _B: [4, 0], _C: onC(O0, 3.6, ob) }, segs: [['_A', '_B'], ['_O', '_C']], dots: ['_O'],
+        angs: [{ v: '_O', a: '_B', b: '_C', t: '?', hl: 1, sol: ob + '°' }, { v: '_O', a: '_C', b: '_A', t: '?', hl: 1, sol: al + '°' }] } });
+  },
+  function rays3() {
+    const full = Math.random() < 0.4, tot = full ? 360 : 180;
+    const R3 = pick(full ? [[2, 3, 4], [3, 4, 5], [1, 2, 2], [4, 5, 6], [5, 6, 7], [2, 3, 3], [4, 4, 7], [5, 5, 8]]
+      : [[1, 2, 3], [2, 3, 4], [3, 4, 5], [1, 3, 5], [2, 3, 5], [1, 4, 5], [4, 5, 6], [1, 2, 6], [2, 5, 8], [1, 1, 2], [3, 5, 7], [1, 2, 7]]);
+    const s = R3[0] + R3[1] + R3[2], x = tot / s, A3 = R3.map(c => c * x), NM = [t`\alpha`, t`\beta`, t`\gamma`], LB = ['α', 'β', 'γ'];
+    const st0 = full ? 90 : 0, P0 = { O: O0 }, rays = [st0, st0 + A3[0], st0 + A3[0] + A3[1]].concat(full ? [] : [180]);
+    rays.forEach((r, i) => { P0['_r' + i] = onC(O0, 3.6, r); });
+    return mk({ skill: full ? 'kąt pełny' : 'kąt półpełny',
+      text: (full ? t`Trzy półproste o wspólnym początku dzielą kąt pełny` : t`Dwie półproste o początku ${M('O')} dzielą kąt półpełny`) + t` na trzy kąty ${M(t`\alpha`)}, ${M(t`\beta`)}, ${M(t`\gamma`)}, których miary są w stosunku ${M(R3.join(' : '))}. Oblicz miary tych kątów.`,
+      fields: A3.map((v, i) => FD(M(NM[i] + ' ='), v)),
+      hints: [t`Kąt ${full ? 'pełny' : 'półpełny'} ma ${M(dg(tot))}.`, t`Oznacz jedną część przez ${M('x')}. Kąty mają wtedy ${M(nx(R3[0]))}, ${M(nx(R3[1]))} i ${M(nx(R3[2]))}.`],
+      steps: [M(t`${nx(R3[0])} + ${nx(R3[1])} + ${nx(R3[2])} = ${dg(tot)} \;\Rightarrow\; ${s}x = ${dg(tot)} \;\Rightarrow\; x = ${dg(x)}`),
+        M(A3.map((v, i) => (R3[i] === 1 ? `${NM[i]} = ${dg(v)}` : t`${NM[i]} = ${R3[i]}\cdot ${dg(x)} = ${dg(v)}`)).join(',\\quad '))],
+      answer: M(A3.map((v, i) => `${NM[i]} = ${dg(v)}`).join(',\\ ')),
+      fig: { P: P0, segs: (full ? [] : [['_r0', '_r3']]).concat([0, 1, 2].filter(i => full || i > 0).map(i => ['O', '_r' + i])), dots: ['O'], hide: full ? ['O'] : [], pos: { O: [0, -1] },
+        angs: A3.map((v, i) => ({ v: 'O', a: '_r' + i, b: '_r' + (full ? (i + 1) % 3 : i + 1), t: LB[i], hl: 1, sol: v + '°' })) } });
+  },
+  function bisectorAdjacent() {
+    const x = 2 * ri(15, 70), y = 180 - x;
+    return mk({ skill: 'dwusieczna i kąty przyległe',
+      text: t`Kąty ${M('AOC')} i ${M('COB')} są przyległe, a ${M(`${K('AOC')} = ${dg(x)}`)}. Półprosta ${M('OD')} jest dwusieczną kąta ${M('COB')}. Oblicz miary kątów ${M('DOB')} i ${M('AOD')}.`,
+      fields: [FD(M(K('DOB') + ' ='), y / 2), FD(M(K('AOD') + ' ='), x + y / 2)],
+      hints: [t`Najpierw policz kąt ${M('COB')} — jest przyległy do kąta ${M('AOC')}.`, t`Dwusieczna dzieli kąt ${M('COB')} na połowy. Kąt ${M('AOD')} składa się z kątów ${M('AOC')} i ${M('COD')}.`],
+      steps: [M(t`${K('COB')} = 180^\circ - ${dg(x)} = ${dg(y)}`), M(t`${K('DOB')} = ${K('COD')} = ${dg(y)} : 2 = ${dg(y / 2)}`), M(t`${K('AOD')} = ${dg(x)} + ${dg(y / 2)} = ${dg(x + y / 2)}`)],
+      answer: M(`${K('DOB')} = ${dg(y / 2)},\\quad ${K('AOD')} = ${dg(x + y / 2)}`),
+      fig: { P: { A: [-4, 0], O: O0, B: [4, 0], C: onC(O0, 3.6, y), D: onC(O0, 3.2, y / 2) }, segs: [['A', 'B'], ['O', 'C'], ['O', 'D', 'h']], dots: ['O'], pos: { O: [0, -1] },
+        angs: [{ v: 'O', a: 'C', b: 'A', t: x + '°', r: 22 }, { v: 'O', a: 'B', b: 'D', t: '?', hl: 1, sol: y / 2 + '°', r: 34 }, { v: 'O', a: 'D', b: 'A', t: '?', hl: 1, sol: (x + y / 2) + '°', r: 58 }] } });
+  }
+],
+3: [
+  function zigzag() {
+    let a, b; do { a = ri(20, 65); b = ri(20, 65); } while (Math.abs(a - b) < 6);
+    const hh = 1.6, A = [5 - hh / Math.tan(rad(a)), 2 * hh], B = [5 - hh / Math.tan(rad(b)), 0], xl = Math.min(A[0], B[0]) - 1.6, xr = 6.8;
+    const P0 = { A, B, P: [5, hh], _k1: [xl, 2 * hh], _k2: [xr, 2 * hh], _l1: [xl, 0], _l2: [xr, 0], _q: [xl, hh], _tk: [xr + 0.4, 2 * hh], _tl: [xr + 0.4, 0] };
+    const askB = Math.random() < 0.35, x = a + b;
+    return mk({ skill: 'proste równoległe i łamana',
+      text: t`Proste ${M('k')} i ${M('l')} są równoległe (jak na rysunku). Kąt między prostą ${M('k')} a odcinkiem ${M('AP')} ma ${M(dg(a))}, ` +
+        (askB ? t`a kąt ${M('APB')} ma ${M(dg(x))}. Oblicz miarę kąta ${M(t`\beta`)} między prostą ${M('l')} a odcinkiem ${M('BP')}.` : t`a kąt między prostą ${M('l')} a odcinkiem ${M('BP')} ma ${M(dg(b))}. Oblicz miarę kąta ${M('APB')}.`),
+      fields: [askB ? FD(M(t`\beta =`), b) : FD(M(K('APB') + ' ='), x)],
+      hints: [t`Przez punkt ${M('P')} poprowadź prostą równoległą do prostych ${M('k')} i ${M('l')}.`, t`Ta prosta dzieli kąt ${M('APB')} na dwa kąty. Każdy z nich jest naprzemianległy do jednego z kątów przy prostych ${M('k')} i ${M('l')}.`],
+      steps: [t`Poprowadźmy przez ${M('P')} prostą równoległą do ${M('k')} i ${M('l')} (przerywana linia na rysunku z rozwiązaniem).`, t`Górna część kąta ${M('APB')} jest naprzemianległa do kąta przy prostej ${M('k')}, więc ma ${M(dg(a))}. Dolna część jest naprzemianległa do kąta przy prostej ${M('l')}.`,
+        askB ? M(t`\beta = ${dg(x)} - ${dg(a)} = ${dg(b)}`) : M(t`${K('APB')} = ${dg(a)} + ${dg(b)} = ${dg(x)}`)],
+      answer: askB ? M(t`\beta = ${dg(b)}`) : M(`${K('APB')} = ${dg(x)}`),
+      fig: { P: P0, segs: [['_k1', '_k2'], ['_l1', '_l2'], ['A', 'P'], ['P', 'B'], ['_q', 'P', 'ds']], par: [['_k1', '_k2', 0.1], ['_l1', '_l2', 0.1]],
+        txt: [{ p: '_tk', t: 'k', c: 'pn' }, { p: '_tl', t: 'l', c: 'pn' }], pos: { A: [-0.3, 1], B: [-0.3, -1], P: [1, 0] },
+        angs: [{ v: 'A', a: '_k2', b: 'P', t: a + '°' }, { v: 'B', a: '_l2', b: 'P', t: askB ? 'β' : b + '°', hl: askB ? 1 : 0, sol: askB ? b + '°' : null },
+          { v: 'P', a: 'A', b: 'B', t: askB ? x + '°' : '?', hl: askB ? 0 : 1, sol: '', r: 44 }, { v: 'P', a: 'A', b: '_q', t: a + '°', so: 1, r: 24 }, { v: 'P', a: '_q', b: 'B', t: b + '°', so: 1, r: 24 }] } });
+  },
+  function bisectorsAdjacent() {
+    const x = 2 * ri(18, 72), y = 180 - x;
+    return mk({ skill: 'dwusieczne kątów przyległych',
+      text: t`Kąty ${M('AOB')} i ${M('BOC')} są przyległe, a ${M(`${K('AOB')} = ${dg(x)}`)}. Półprosta ${M('OD')} jest dwusieczną kąta ${M('AOB')}, a półprosta ${M('OE')} — dwusieczną kąta ${M('BOC')}. Oblicz miary kątów ${M('DOE')} i ${M('DOC')}.`,
+      fields: [FD(M(K('DOE') + ' ='), 90), FD(M(K('DOC') + ' ='), 180 - x / 2)],
+      hints: [t`${M(t`${K('BOC')} = 180^\circ - ${K('AOB')}`)}. Dwusieczne dzielą oba kąty na połowy.`, t`${M(`${K('DOE')} = ${K('DOB')} + ${K('BOE')}`)}, a ${M(`${K('DOC')} = ${K('DOB')} + ${K('BOC')}`)}.`],
+      steps: [M(t`${K('BOC')} = 180^\circ - ${dg(x)} = ${dg(y)}`), M(t`${K('DOB')} = ${dg(x / 2)},\qquad ${K('BOE')} = ${dg(y / 2)}`), M(t`${K('DOE')} = ${dg(x / 2)} + ${dg(y / 2)} = 90^\circ`), M(t`${K('DOC')} = ${dg(x / 2)} + ${dg(y)} = ${dg(180 - x / 2)}`),
+        t`Ciekawostka: dwusieczne dwóch kątów przyległych są zawsze prostopadłe, bo ${M(t`\tfrac12\cdot 180^\circ = 90^\circ`)}.`],
+      answer: M(`${K('DOE')} = 90^\\circ,\\quad ${K('DOC')} = ${dg(180 - x / 2)}`),
+      fig: { P: { A: [-4, 0], O: O0, C: [4, 0], B: onC(O0, 3.6, 180 - x), D: onC(O0, 3.3, 180 - x / 2), E: onC(O0, 3.3, y / 2) }, segs: [['A', 'C'], ['O', 'B'], ['O', 'D', 'h'], ['O', 'E', 'h']], dots: ['O'], pos: { O: [0, -1] },
+        angs: [{ v: 'O', a: 'B', b: 'A', t: x + '°', r: 20 }, { v: 'O', a: 'E', b: 'D', t: '?', hl: 1, sol: '90°', r: 42 }] } });
+  },
+  function clockMinutes() {
+    let h, m, ang, hA, mA, d0;
+    do { h = ri(1, 11); m = pick([10, 15, 20, 30, 40, 45, 50]); hA = 30 * h + m / 2; mA = 6 * m; d0 = Math.abs(hA - mA); ang = Math.min(d0, 360 - d0); } while (ang < 20);
+    return mk({ skill: 'kąty na zegarze',
+      text: t`Jaki kąt tworzą wskazówki zegara o godzinie ${M(`${h}{:}${m}`)}? Podaj miarę mniejszego z kątów między wskazówkami.`,
+      fields: [FD('kąt:', ang)],
+      hints: [t`Wskazówka minutowa obraca się o ${M(dg(360))} w 60 minut, czyli o ${M(dg(6))} na minutę.`, t`Wskazówka godzinowa obraca się o ${M(dg(30))} na godzinę, czyli o ${M(t`0{,}5^\circ`)} na minutę. O ${M(`${h}{:}${m}`)} nie wskazuje dokładnie liczby ${M(h)}!`],
+      steps: [t`Liczymy kąty od położenia „12”, zgodnie z ruchem wskazówek.`, t`Wskazówka minutowa: ${M(t`${m}\cdot 6^\circ = ${dg(mA)}`)}.`, t`Wskazówka godzinowa: ${M(t`${h}\cdot 30^\circ + ${m}\cdot 0{,}5^\circ = ${dg(30 * h)} + ${dg(m / 2)} = ${dg(hA)}`)}.`,
+        d0 <= 180 ? t`Kąt między wskazówkami: ${M(t`|${dg(hA)} - ${dg(mA)}| = ${dg(ang)}`)}.` : t`Różnica: ${M(t`|${dg(hA)} - ${dg(mA)}| = ${dg(d0)}`)} — to więcej niż ${M(dg(180))}, więc mniejszy kąt ma ${M(t`360^\circ - ${dg(d0)} = ${dg(ang)}`)}.`],
+      answer: t`Kąt ma ${M(dg(ang))}.`,
+      fig: clockFig(h, m, { angs: [{ v: '_S', a: '_M', b: '_H', t: '?', hl: 1, sol: txt(ang) + '°' }] }) });
+  },
+  function parallelTriangle() {
+    let x, y; do { x = ri(35, 75); y = ri(35, 75); } while (x + y > 140 || Math.abs(x - y) < 5);
+    const hh = 3, A = [-hh / Math.tan(rad(x)), 0], B = [hh / Math.tan(rad(y)), 0], xl = A[0] - 1.3, xr = B[0] + 1.3, z = 180 - x - y;
+    const P0 = { A, B, C: [0, hh], _k1: [xl, hh], _k2: [xr, hh], _l1: [xl, 0], _l2: [xr, 0], _tk: [xr + 0.4, hh], _tl: [xr + 0.4, 0] };
+    return mk({ skill: 'proste równoległe i trójkąt',
+      text: t`Proste ${M('k')} i ${M('l')} są równoległe. Wierzchołek ${M('C')} trójkąta ${M('ABC')} leży na prostej ${M('k')}, a bok ${M('AB')} — na prostej ${M('l')}. Kąty między prostą ${M('k')} a bokami ${M('AC')} i ${M('BC')} mają miary ${M(dg(x))} i ${M(dg(y))} (jak na rysunku). Oblicz miary kątów trójkąta ${M('ABC')}.`,
+      fields: [FD(M(K('CAB') + ' ='), x), FD(M(K('ABC') + ' ='), y), FD(M(K('ACB') + ' ='), z)],
+      hints: [t`Kąt ${M('CAB')} i kąt ${M(dg(x))} przy wierzchołku ${M('C')} są naprzemianległe (bo ${M(t`k \parallel l`)}).`, t`Trzy kąty przy wierzchołku ${M('C')} leżą wzdłuż prostej ${M('k')} — razem mają ${M(dg(180))}.`],
+      steps: [t`Kąty naprzemianległe: ${M(`${K('CAB')} = ${dg(x)}`)} oraz ${M(`${K('ABC')} = ${dg(y)}`)}.`, M(t`${K('ACB')} = 180^\circ - ${dg(x)} - ${dg(y)} = ${dg(z)}`), t`Przy okazji widać, dlaczego suma kątów każdego trójkąta to ${M(dg(180))}: trzy kąty przy ${M('C')} są równe kątom trójkąta.`],
+      answer: M(`${K('CAB')} = ${dg(x)},\\ ${K('ABC')} = ${dg(y)},\\ ${K('ACB')} = ${dg(z)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['_k1', '_k2'], ['_l1', '_l2']], par: [['_k1', '_k2', 0.12], ['_l1', '_l2', 0.12]],
+        txt: [{ p: '_tk', t: 'k', c: 'pn' }, { p: '_tl', t: 'l', c: 'pn' }],
+        angs: [{ v: 'C', a: '_k1', b: 'A', t: x + '°' }, { v: 'C', a: 'B', b: '_k2', t: y + '°' }, { v: 'A', a: 'B', b: 'C', t: '?', hl: 1, sol: x + '°' }, { v: 'B', a: 'C', b: 'A', t: '?', hl: 1, sol: y + '°' }, { v: 'C', a: 'A', b: 'B', t: '?', hl: 1, sol: z + '°' }] } });
+  }
+]
+};
+/* ---------- TRÓJKĄTY ---------- */
+const andJ = a => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' i ' + a[a.length - 1]);
+const GT = {
+1: [
+  function angleSum() {
+    if (Math.random() < 0.7) {
+      let a, b, g; do { a = ri(25, 95); b = ri(25, 90); g = 180 - a - b; } while (g < 20 || a === b || b === g || a === g);
+      return mk({ skill: 'suma kątów trójkąta',
+        text: t`W trójkącie ${M('ABC')} kąt przy wierzchołku ${M('A')} ma miarę ${M(dg(a))}, a kąt przy wierzchołku ${M('B')} ma miarę ${M(dg(b))}. Oblicz miarę kąta przy wierzchołku ${M('C')}.`,
+        fields: [FD(M(K('ACB') + ' ='), g)],
+        hints: [t`Suma miar kątów w każdym trójkącie jest równa ${M(dg(180))}.`],
+        steps: [M(t`${K('ACB')} = 180^\circ - ${dg(a)} - ${dg(b)} = ${dg(g)}`)],
+        answer: M(`${K('ACB')} = ${dg(g)}`),
+        fig: { P: triAng(a, b), polys: [['A', 'B', 'C']], angs: [{ v: 'A', a: 'B', b: 'C', t: a + '°' }, { v: 'B', a: 'C', b: 'A', t: b + '°' }, { v: 'C', a: 'A', b: 'B', t: '?', hl: 1, sol: g + '°' }] } });
+    }
+    let a; do { a = ri(15, 75); } while (Math.abs(a - 45) < 4);
+    return mk({ skill: 'kąty trójkąta prostokątnego',
+      text: t`${RIGHT_C}, a kąt ${M('BAC')} ma miarę ${M(dg(a))}. Oblicz miarę kąta ${M('ABC')}.`,
+      fields: [FD(M(K('ABC') + ' ='), 90 - a)],
+      hints: [t`Suma kątów trójkąta to ${M(dg(180))}, a jeden z nich ma ${M(dg(90))}. Dwa kąty ostre trójkąta prostokątnego mają więc razem ${M(dg(90))}.`],
+      steps: [M(t`${K('ABC')} = 180^\circ - 90^\circ - ${dg(a)} = ${dg(90 - a)}`)],
+      answer: M(`${K('ABC')} = ${dg(90 - a)}`),
+      fig: rtFig(3 * Math.tan(rad(a)), 3, [], [{ v: 'A', a: 'B', b: 'C', t: a + '°' }, { v: 'B', a: 'C', b: 'A', t: '?', hl: 1, sol: (90 - a) + '°' }]) });
+  },
+  function isosceles() {
+    if (Math.random() < 0.5) {
+      const be = ri(30, 80), ga = 180 - 2 * be;
+      return mk({ skill: 'trójkąt równoramienny',
+        text: t`Trójkąt ${M('ABC')} jest równoramienny, a jego ramiona ${M('AC')} i ${M('BC')} mają równe długości. Kąt ${M('BAC')} przy podstawie ma miarę ${M(dg(be))}. Oblicz miarę kąta ${M('ACB')}.`,
+        fields: [FD(M(K('ACB') + ' ='), ga)],
+        hints: [t`W trójkącie równoramiennym kąty przy podstawie mają równe miary: ${M(`${K('BAC')} = ${K('ABC')}`)}.`, t`Od ${M(dg(180))} odejmij oba kąty przy podstawie.`],
+        steps: [t`Kąty przy podstawie są równe: ${M(`${K('ABC')} = ${K('BAC')} = ${dg(be)}`)}.`, M(t`${K('ACB')} = 180^\circ - 2\cdot ${dg(be)} = ${dg(ga)}`)],
+        answer: M(`${K('ACB')} = ${dg(ga)}`),
+        fig: { P: triAng(be, be), polys: [['A', 'B', 'C']], ticks: [['A', 'C', 1], ['B', 'C', 1]], angs: [{ v: 'A', a: 'B', b: 'C', t: be + '°' }, { v: 'C', a: 'A', b: 'B', t: '?', hl: 1, sol: ga + '°' }] } });
+    }
+    const ga = 2 * ri(10, 60), be = 90 - ga / 2;
+    return mk({ skill: 'trójkąt równoramienny',
+      text: t`Trójkąt ${M('ABC')} jest równoramienny, ${M(`${L('AC')} = ${L('BC')}`)}. Kąt ${M('ACB')} między ramionami ma miarę ${M(dg(ga))}. Oblicz miarę kąta ${M('BAC')}.`,
+      fields: [FD(M(K('BAC') + ' ='), be)],
+      hints: [t`Kąty przy podstawie ${M('AB')} są równe — oznacz każdy z nich przez ${M('x')}.`, t`Suma kątów: ${M(`2x + ${dg(ga)} = 180^\\circ`)}.`],
+      steps: [t`Kąty przy podstawie są równe, oznaczmy je przez ${M('x')}: ${M(`2x + ${dg(ga)} = 180^\\circ`)}.`, M(t`2x = ${dg(180 - ga)} \;\Rightarrow\; x = ${dg(be)}`)],
+      answer: M(`${K('BAC')} = ${dg(be)}`),
+      fig: { P: triAng(be, be), polys: [['A', 'B', 'C']], ticks: [['A', 'C', 1], ['B', 'C', 1]], angs: [{ v: 'A', a: 'B', b: 'C', t: '?', hl: 1, sol: be + '°' }, { v: 'C', a: 'A', b: 'B', t: ga + '°' }] } });
+  },
+  function triangleIneq() {
+    const make = ok => {
+      for (;;) {
+        let s;
+        if (!ok && Math.random() < 0.35) { const a = ri(2, 8), b = ri(2, 8); s = [a, b, a + b]; } else s = [ri(2, 12), ri(2, 12), ri(3, 16)];
+        s.sort((x, y) => x - y);
+        if ((s[0] + s[1] > s[2]) === ok && s[0] !== s[2]) return s;
+      }
+    };
+    const items = [Math.random() < 0.5, Math.random() < 0.5].map(ok => {
+      const s = make(ok), sum = s[0] + s[1];
+      return { s: t`Z odcinków o długościach ${andJ(shuffle(s).map(v => UN(v, 'cm')))} można zbudować trójkąt.`, v: ok,
+        why: t`Najdłuższy odcinek ma ${UN(s[2], 'cm')}, a dwa krótsze razem: ` + (ok ? t`${M(`${s[0]} + ${s[1]} = ${sum} > ${s[2]}`)}, więc trójkąt da się zbudować.`
+          : sum === s[2] ? t`${M(`${s[0]} + ${s[1]} = ${sum}`)}, czyli tyle samo — krótsze odcinki złożyłyby się w jeden odcinek, więc trójkąta nie da się zbudować.` : t`${M(`${s[0]} + ${s[1]} = ${sum} < ${s[2]}`)}, więc trójkąta nie da się zbudować.`) };
+    });
+    return mk({ skill: 'nierówność trójkąta', text: PF, tf: items.map(i => ({ s: i.s, v: i.v })),
+      hints: [t`Trójkąt da się zbudować tylko wtedy, gdy najdłuższy odcinek jest krótszy od sumy dwóch pozostałych.`],
+      steps: tfSteps(items), answer: tfAnswer(items) });
+  },
+  function perimeter() {
+    const v = ri(1, 3);
+    if (v < 3) {
+      let a, b; do { a = ri(3, 14); b = ri(3, 15); } while (2 * b <= a || a === b);
+      const O = a + 2 * b, askLeg = v === 1;
+      return mk({ skill: 'obwód trójkąta',
+        text: askLeg ? t`Obwód trójkąta równoramiennego jest równy ${UN(O, 'cm')}, a jego podstawa ma długość ${UN(a, 'cm')}. Oblicz długość ramienia tego trójkąta.`
+          : t`Obwód trójkąta równoramiennego jest równy ${UN(O, 'cm')}, a jego ramię ma długość ${UN(b, 'cm')}. Oblicz długość podstawy tego trójkąta.`,
+        fields: [askLeg ? FU('ramię:', b, 'cm') : FU('podstawa:', a, 'cm')],
+        hints: [t`Obwód to suma długości wszystkich boków. Trójkąt równoramienny ma dwa równe ramiona: ${M(t`\text{Ob} = a + 2b`)}.`],
+        steps: askLeg ? [M(t`${a} + 2b = ${O} \;\Rightarrow\; 2b = ${O - a} \;\Rightarrow\; b = ${b}`)] : [M(t`a + 2\cdot ${b} = ${O} \;\Rightarrow\; a = ${O} - ${2 * b} = ${a}`)],
+        answer: askLeg ? t`Ramię ma ${UN(b, 'cm')}.` : t`Podstawa ma ${UN(a, 'cm')}.`,
+        fig: { P: triSides(b, b, a), polys: [['A', 'B', 'C']], ticks: [['A', 'C', 1], ['B', 'C', 1]],
+          lens: [askLeg ? Lb('A', 'B', a + ' cm') : Q('A', 'B', a, { sol: a + ' cm' }), askLeg ? Q('A', 'C', b, { sol: b + ' cm' }) : Lb('A', 'C', b + ' cm')] } });
+    }
+    const s = 3 * ri(1, 6), a = 4 * s / 3;
+    return mk({ skill: 'obwód trójkąta',
+      text: t`Trójkąt równoboczny ma taki sam obwód jak kwadrat o boku ${UN(s, 'cm')}. Oblicz długość boku tego trójkąta.`,
+      fields: [FU('bok trójkąta:', a, 'cm')],
+      hints: [t`Obwód kwadratu o boku ${M('a')} to ${M('4a')}, a obwód trójkąta równobocznego o boku ${M('b')} to ${M('3b')}.`],
+      steps: [M(t`\text{Ob} = 4\cdot ${s} = ${4 * s}\ \text{cm}`), M(t`\text{bok trójkąta} = ${4 * s} : 3 = ${a}\ \text{cm}`)],
+      answer: t`Bok trójkąta ma ${UN(a, 'cm')}.`,
+      fig: { P: { _A: [0, 0], _B: [s, 0], _C: [s, s], _D: [0, s], E: [s * 1.4, 0], F: [s * 1.4 + a, 0], G: [s * 1.4 + a / 2, a * Math.sqrt(3) / 2] }, hide: ['E', 'F', 'G'],
+        polys: [['_A', '_B', '_C', '_D'], ['E', 'F', 'G']], ticks: [['E', 'F', 1], ['F', 'G', 1], ['G', 'E', 1]], lens: [Lb('_A', '_B', s + ' cm'), Q('E', 'F', a, { sol: a + ' cm' })] } });
+  }
+],
+2: [
+  function exterior() {
+    let a, g; do { a = ri(30, 80); g = ri(30, 80); } while (a + g >= 160 || a + g <= 95 || Math.abs(a - g) < 6);
+    const d = a + g, P0 = triAng(a, 180 - d); P0.D = [P0.B[0] + 3.2, 0];
+    return mk({ skill: 'kąt zewnętrzny trójkąta',
+      text: t`Bok ${M('AB')} trójkąta ${M('ABC')} przedłużono poza wierzchołek ${M('B')} do punktu ${M('D')}. Kąt ${M('CBD')} ma miarę ${M(dg(d))}, a kąt ${M('BAC')} ma miarę ${M(dg(a))}. Oblicz miarę kąta ${M('ACB')}.`,
+      fields: [FD(M(K('ACB') + ' ='), g)],
+      hints: [t`Kąty ${M('ABC')} i ${M('CBD')} są przyległe, więc razem mają ${M(dg(180))}.`, t`Krócej: kąt zewnętrzny trójkąta jest równy sumie dwóch kątów wewnętrznych do niego nieprzyległych.`],
+      steps: [t`Kąty przyległe: ${M(t`${K('ABC')} = 180^\circ - ${dg(d)} = ${dg(180 - d)}`)}.`, M(t`${K('ACB')} = 180^\circ - ${dg(a)} - ${dg(180 - d)} = ${dg(g)}`), t`Sprawdzenie: ${M(`${dg(a)} + ${dg(g)} = ${dg(d)}`)} — tyle ma kąt zewnętrzny.`],
+      answer: M(`${K('ACB')} = ${dg(g)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['B', 'D']], angs: [{ v: 'A', a: 'B', b: 'C', t: a + '°' }, { v: 'B', a: 'D', b: 'C', t: d + '°' }, { v: 'C', a: 'A', b: 'B', t: '?', hl: 1, sol: g + '°' }] } });
+  },
+  function ratioAngles() {
+    const NM = [t`\alpha`, t`\beta`, t`\gamma`], LB = ['α', 'β', 'γ'];
+    let A3, text, hints, steps;
+    if (Math.random() < 0.5) {
+      const R3 = pick([[1, 2, 3], [2, 3, 4], [3, 4, 5], [1, 3, 5], [2, 3, 5], [1, 4, 5], [4, 5, 6], [1, 2, 6], [2, 5, 8], [1, 1, 2], [3, 5, 7], [1, 2, 7], [1, 1, 4], [2, 2, 5]]);
+      const s = R3[0] + R3[1] + R3[2], x = 180 / s; A3 = R3.map(c => c * x);
+      text = t`Miary kątów ${M(t`\alpha`)}, ${M(t`\beta`)}, ${M(t`\gamma`)} trójkąta są w stosunku ${M(R3.join(' : '))}. Oblicz miary tych kątów.`;
+      hints = [t`Oznacz jedną część przez ${M('x')}: kąty mają ${M(nx(R3[0]))}, ${M(nx(R3[1]))} i ${M(nx(R3[2]))}.`, t`Suma kątów trójkąta to ${M(dg(180))}.`];
+      steps = [M(t`${nx(R3[0])} + ${nx(R3[1])} + ${nx(R3[2])} = 180^\circ \;\Rightarrow\; ${s}x = 180^\circ \;\Rightarrow\; x = ${dg(x)}`),
+        M(A3.map((v, i) => (R3[i] === 1 ? `${NM[i]} = ${dg(v)}` : t`${NM[i]} = ${R3[i]}\cdot ${dg(x)} = ${dg(v)}`)).join(',\\quad '))];
+    } else {
+      let k, d, al; do { k = pick([2, 3]); d = pick([10, 15, 20, 25, 30, -10, -15, -20]); al = (180 - d) / (k + 2); } while (!isInt(al) || al + d <= 5);
+      A3 = [al, k * al, al + d];
+      const sg = d > 0 ? '+' : '-', dd = dg(Math.abs(d));
+      text = t`W trójkącie kąt ${M(t`\beta`)} jest ${k === 2 ? 'dwa' : 'trzy'} razy większy od kąta ${M(t`\alpha`)}, a kąt ${M(t`\gamma`)} jest o ${M(dd)} ${d > 0 ? 'większy' : 'mniejszy'} od kąta ${M(t`\alpha`)}. Oblicz miary kątów tego trójkąta.`;
+      hints = [t`Wyraź wszystkie kąty przez ${M(t`\alpha`)}: ${M(t`\beta = ${k}\alpha`)}, ${M(t`\gamma = \alpha ${sg} ${dd}`)}.`, t`Suma kątów trójkąta to ${M(dg(180))} — ułóż równanie.`];
+      steps = [M(t`\alpha + ${k}\alpha + \alpha ${sg} ${dd} = 180^\circ`), M(t`${k + 2}\alpha = ${dg(180 - d)} \;\Rightarrow\; \alpha = ${dg(al)}`), M(t`\beta = ${k}\cdot ${dg(al)} = ${dg(k * al)},\qquad \gamma = ${dg(al)} ${sg} ${dd} = ${dg(al + d)}`)];
+    }
+    return mk({ skill: 'kąty trójkąta i równanie', text, hints, steps,
+      fields: A3.map((v, i) => FD(M(NM[i] + ' ='), v)), answer: M(A3.map((v, i) => `${NM[i]} = ${dg(v)}`).join(',\\ ')),
+      fig: { P: triAng(A3[0], A3[1]), polys: [['A', 'B', 'C']], hide: ['A', 'B', 'C'], angs: A3.map((v, i) => ({ v: 'ABC'[i], a: 'ABC'[(i + 1) % 3], b: 'ABC'[(i + 2) % 3], t: LB[i], hl: 1, sol: v + '°' })) } });
+  },
+  function area() {
+    const v = ri(1, 3);
+    if (v === 3) {
+      const [a, b] = legs(pick(TRIPLES)), Pv = a * b / 2, askLeg = Math.random() < 0.5;
+      return mk({ skill: 'pole trójkąta prostokątnego',
+        text: askLeg ? t`Pole trójkąta prostokątnego jest równe ${UN(Pv, 'cm²')}, a jedna z jego przyprostokątnych ma długość ${UN(a, 'cm')}. Oblicz długość drugiej przyprostokątnej.`
+          : t`Przyprostokątne trójkąta prostokątnego mają długości ${UN(a, 'cm')} i ${UN(b, 'cm')}. Oblicz pole tego trójkąta.`,
+        fields: [askLeg ? FU('przyprostokątna:', b, 'cm') : FU('pole:', Pv, 'cm²')],
+        hints: [t`W trójkącie prostokątnym jedna przyprostokątna jest wysokością opuszczoną na drugą, więc ${M(t`P = \tfrac12\cdot a\cdot b`)}.`],
+        steps: askLeg ? [M(t`\tfrac12\cdot ${a}\cdot b = ${T(Pv)} \;\Rightarrow\; ${T(a / 2)}\cdot b = ${T(Pv)} \;\Rightarrow\; b = ${b}\ \text{cm}`)] : [M(t`P = \tfrac12\cdot ${a}\cdot ${b} = ${T(Pv)}\ \text{cm}^2`)],
+        answer: askLeg ? t`Druga przyprostokątna ma ${UN(b, 'cm')}.` : t`Pole jest równe ${UN(Pv, 'cm²')}.`,
+        fig: rtFig(a, b, [Lb('B', 'C', a + ' cm'), askLeg ? Q('C', 'A', b, { sol: b + ' cm' }) : Lb('C', 'A', b + ' cm')]) });
+    }
+    const a = ri(4, 14), h = ri(3, 10), Pv = a * h / 2, off = pick([0.3, 0.5, 0.7, 1.15, -0.2]), askH = v === 2, out = off > 1 || off < 0;
+    const P0 = { A: O0, B: [a, 0], C: [a * off, h], _H: [a * off, 0] };
+    return mk({ skill: 'pole trójkąta',
+      text: askH ? t`Pole trójkąta ${M('ABC')} jest równe ${UN(Pv, 'cm²')}, a bok ${M('AB')} ma długość ${UN(a, 'cm')}. Oblicz wysokość tego trójkąta opuszczoną na bok ${M('AB')}.`
+        : t`Bok ${M('AB')} trójkąta ${M('ABC')} ma długość ${UN(a, 'cm')}, a wysokość opuszczona na ten bok ma ${UN(h, 'cm')}. Oblicz pole tego trójkąta.`,
+      fields: [askH ? FU(M('h ='), h, 'cm') : FU('pole:', Pv, 'cm²')],
+      hints: [t`Pole trójkąta: ${M(t`P = \tfrac12\cdot a\cdot h`)}, gdzie ${M('h')} to wysokość opuszczona na bok ${M('a')}.`].concat(askH ? [t`Wstaw dane do wzoru i wyznacz ${M('h')}.`] : []),
+      steps: askH ? [M(t`\tfrac12\cdot ${a}\cdot h = ${T(Pv)}`), M(t`h = \frac{2\cdot ${T(Pv)}}{${a}} = ${h}\ \text{cm}`)] : [M(t`P = \tfrac12\cdot ${a}\cdot ${h} = ${T(Pv)}\ \text{cm}^2`)],
+      answer: askH ? t`Wysokość ma ${UN(h, 'cm')}.` : t`Pole jest równe ${UN(Pv, 'cm²')}.`,
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['C', '_H', 'd']].concat(out ? [[off > 1 ? 'B' : 'A', '_H', 'd']] : []), angs: [{ v: '_H', a: off < 0 ? 'A' : 'B', b: 'C', right: 1 }],
+        lens: [Lb('A', 'B', a + ' cm'), askH ? Q('C', '_H', h, { t: 'h', sol: h + ' cm', s: off > 0.5 ? -1 : 1 }) : Lb('C', '_H', h + ' cm', { s: off > 0.5 ? -1 : 1 })] } });
+  },
+  function gridTriangle() {
+    let ax, bx, ay, cx, cy;
+    do { ax = ri(0, 2); bx = ax + ri(3, 6); ay = ri(0, 1); cy = ay + ri(2, 5); cx = ri(0, 8); } while (bx > 8 || cy > 6 || cx === ax || cx === bx);
+    const base = bx - ax, h = cy - ay, Pv = base * h / 2, out = cx < ax || cx > bx;
+    return mk({ skill: 'pole trójkąta na kratkach',
+      text: t`Trójkąt ${M('ABC')} narysowano na kratkach o boku ${UN(1, 'cm')} (jak na rysunku). Oblicz pole tego trójkąta.`,
+      fields: [FU('pole:', Pv, 'cm²')],
+      hints: [t`Bok ${M('AB')} leży na linii kratek — przyjmij go za podstawę i policz jego długość.`, t`Wysokość to odległość wierzchołka ${M('C')} od prostej ${M('AB')}: policz kratki w pionie.` + (out ? t` Spodek wysokości leży poza bokiem ${M('AB')} — to nic nie zmienia.` : '')],
+      steps: [t`${M(t`${L('AB')} = ${base}\ \text{cm}`)}, a wysokość opuszczona z ${M('C')} na prostą ${M('AB')} ma ${UN(h, 'cm')}.`, M(t`P = \tfrac12\cdot ${base}\cdot ${h} = ${T(Pv)}\ \text{cm}^2`)],
+      answer: t`Pole jest równe ${UN(Pv, 'cm²')}.`,
+      fig: { P: { A: [ax, ay], B: [bx, ay], C: [cx, cy], _H: [cx, ay] }, grid: [0, 0, 8, 6], polys: [['A', 'B', 'C']],
+        segs: [['C', '_H', 'ds']].concat(out ? [[cx < ax ? 'A' : 'B', '_H', 'ds']] : []), angs: [{ v: '_H', a: cx < ax ? 'A' : 'B', b: 'C', right: 1, so: 1 }] } });
+  }
+],
+3: [
+  function isoTwoCases() {
+    const x = 2 * ri(10, 40), c1 = [x, x, 180 - 2 * x], c2 = [x, (180 - x) / 2, (180 - x) / 2];
+    let w; do { const y = ri(20, 120); w = [x, y, 180 - x - y]; } while (w[2] < 10 || w[1] === w[2] || w[1] === x || w[2] === x);
+    const fmt = a => andJ(a.map(v => M(dg(v))));
+    const pool = [
+      { s: t`Kąty tego trójkąta mogą mieć miary ${fmt(c1)}.`, v: true, why: t`Gdy ${M(dg(x))} to kąt przy podstawie, drugi kąt przy podstawie też ma ${M(dg(x))}, a trzeci ${M(t`180^\circ - 2\cdot ${dg(x)} = ${dg(180 - 2 * x)}`)}.` },
+      { s: t`Kąty tego trójkąta mogą mieć miary ${fmt(c2)}.`, v: true, why: t`Gdy ${M(dg(x))} to kąt między ramionami, każdy kąt przy podstawie ma ${M(t`\frac{180^\circ - ${dg(x)}}{2} = ${dg(c2[1])}`)}.` },
+      { s: t`Kąty tego trójkąta mogą mieć miary ${fmt(w)}.`, v: false, why: t`Żadne dwa z tych kątów nie są równe, a trójkąt równoramienny ma dwa równe kąty.` },
+      { s: 'Ten trójkąt może być rozwartokątny.', v: x < 45, why: x < 45 ? t`Gdy ${M(dg(x))} to kąt przy podstawie, trzeci kąt ma ${M(dg(180 - 2 * x))} — więcej niż ${M(dg(90))}.` : t`W obu możliwych przypadkach (${fmt(c1)} albo ${fmt(c2)}) wszystkie kąty są ostre.` },
+      { s: 'Ten trójkąt może być prostokątny.', v: false, why: t`W obu możliwych przypadkach (${fmt(c1)} albo ${fmt(c2)}) żaden kąt nie ma ${M(dg(90))}.` }
+    ];
+    const items = shuffle(pool).slice(0, 2);
+    return mk({ skill: 'trójkąt równoramienny — dwa przypadki', text: t`W trójkącie równoramiennym jeden z kątów ma miarę ${M(dg(x))}. ` + PF, tf: items.map(i => ({ s: i.s, v: i.v })),
+      hints: [t`Kąt ${M(dg(x))} może być kątem przy podstawie albo kątem między ramionami — rozważ oba przypadki.`],
+      steps: [t`Przypadek 1 — ${M(dg(x))} przy podstawie: kąty ${fmt(c1)}.`, t`Przypadek 2 — ${M(dg(x))} między ramionami: kąty ${fmt(c2)}.`].concat(tfSteps(items)), answer: tfAnswer(items) });
+  },
+  function isoBisector() {
+    const ga = 4 * ri(5, 30), be = (180 - ga) / 2, P0 = triAng(be, be);
+    P0.D = meet(P0.A, onC(P0.A, 1, be / 2), P0.B, P0.C);
+    return mk({ skill: 'trójkąt równoramienny i dwusieczna',
+      text: t`W trójkącie równoramiennym ${M('ABC')} ramiona ${M('AC')} i ${M('BC')} mają równe długości, a kąt ${M('ACB')} ma miarę ${M(dg(ga))}. Dwusieczna kąta ${M('BAC')} przecina bok ${M('BC')} w punkcie ${M('D')}. Oblicz miary kątów ${M('BAD')} i ${M('ADC')}.`,
+      fields: [FD(M(K('BAD') + ' ='), be / 2), FD(M(K('ADC') + ' ='), 3 * be / 2)],
+      hints: [t`Najpierw policz kąty przy podstawie: ${M(t`${K('BAC')} = ${K('ABC')} = \frac{180^\circ - ${dg(ga)}}{2}`)}.`, t`Dwusieczna dzieli kąt ${M('BAC')} na połowy. Kąt ${M('ADC')} jest kątem zewnętrznym trójkąta ${M('ABD')}.`],
+      steps: [M(t`${K('BAC')} = ${K('ABC')} = \frac{180^\circ - ${dg(ga)}}{2} = ${dg(be)}`), M(t`${K('BAD')} = ${dg(be)} : 2 = ${dg(be / 2)}`), t`Kąt zewnętrzny trójkąta ${M('ABD')} przy wierzchołku ${M('D')}: ${M(t`${K('ADC')} = ${K('BAD')} + ${K('ABD')} = ${dg(be / 2)} + ${dg(be)} = ${dg(3 * be / 2)}`)}.`],
+      answer: M(`${K('BAD')} = ${dg(be / 2)},\\quad ${K('ADC')} = ${dg(3 * be / 2)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['A', 'D', 'h']], ticks: [['A', 'C', 1], ['B', 'C', 1]], pos: { D: [1, 0.3] },
+        angs: [{ v: 'C', a: 'A', b: 'B', t: ga + '°' }, { v: 'A', a: 'B', b: 'D', t: '?', hl: 1, sol: be / 2 + '°', r: 40 }, { v: 'D', a: 'A', b: 'C', t: '?', hl: 1, sol: 3 * be / 2 + '°' }] } });
+  },
+  function twoHeights() {
+    let a, b, ha, hb, xA;
+    for (;;) {
+      a = ri(6, 16); b = ri(5, 15); ha = ri(3, b - 1); hb = a * ha / b;
+      if (!isInt(hb * 10) || a === b) continue;
+      xA = Math.sqrt(b * b - ha * ha);
+      if (xA >= a - 0.4 || xA < 0.4 || a * xA / b >= b - 0.4) continue;
+      break;
+    }
+    const P0 = { C: O0, B: [a, 0], A: [xA, ha], _H: [xA, 0] }; P0._G = foot(P0.B, P0.C, P0.A);
+    return mk({ skill: 'dwie wysokości trójkąta',
+      text: t`W trójkącie ${M('ABC')} bok ${M('BC')} ma długość ${UN(a, 'cm')}, bok ${M('AC')} ma długość ${UN(b, 'cm')}, a wysokość opuszczona na bok ${M('BC')} ma ${UN(ha, 'cm')}. Oblicz długość wysokości opuszczonej na bok ${M('AC')}.`,
+      fields: [FU(M('h_{AC} ='), hb, 'cm')],
+      hints: [t`Pole trójkąta możesz policzyć, biorąc za podstawę dowolny bok i wysokość opuszczoną na ten bok.`, M(t`\tfrac12\cdot ${L('BC')}\cdot h_{BC} = \tfrac12\cdot ${L('AC')}\cdot h_{AC}`) + '.'],
+      steps: [M(t`P = \tfrac12\cdot ${a}\cdot ${ha} = ${T(a * ha / 2)}\ \text{cm}^2`), M(t`\tfrac12\cdot ${b}\cdot h_{AC} = ${T(a * ha / 2)} \;\Rightarrow\; h_{AC} = \frac{2\cdot ${T(a * ha / 2)}}{${b}} = ${T(hb)}\ \text{cm}`)],
+      answer: t`Wysokość ma ${UN(hb, 'cm')}.`,
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['A', '_H', 'd'], ['B', '_G', 'h']], angs: [{ v: '_H', a: 'B', b: 'A', right: 1 }, { v: '_G', a: 'A', b: 'B', right: 1 }],
+        lens: [Lb('C', 'B', a + ' cm'), Lb('C', 'A', b + ' cm', { at: 0.3 }), Lb('A', '_H', ha + ' cm'), Q('B', '_G', hb, { t: 'h', sol: txt(hb) + ' cm' })] } });
+  },
+  function rightAltitudeAngles() {
+    let x; do { x = ri(20, 70); } while (Math.abs(x - 45) < 5);
+    const b = 7 * cos(x), P0 = { A: O0, B: [7, 0], C: [b * cos(x), b * sin(x)] }; P0.D = [P0.C[0], 0];
+    return mk({ skill: 'kąty w trójkącie prostokątnym',
+      text: t`W trójkącie prostokątnym ${M('ABC')} kąt ${M('ACB')} jest prosty, a ${M(`${K('BAC')} = ${dg(x)}`)}. Odcinek ${M('CD')} jest wysokością tego trójkąta. Oblicz miary kątów ${M('ACD')} i ${M('BCD')}.`,
+      fields: [FD(M(K('ACD') + ' ='), 90 - x), FD(M(K('BCD') + ' ='), x)],
+      hints: [t`Trójkąt ${M('ADC')} jest prostokątny (kąt prosty przy ${M('D')}). Suma jego kątów to ${M(dg(180))}.`, t`Kąty ${M('ACD')} i ${M('BCD')} tworzą razem kąt prosty ${M('ACB')}.`],
+      steps: [M(t`${K('ACD')} = 180^\circ - 90^\circ - ${dg(x)} = ${dg(90 - x)}`), M(t`${K('BCD')} = 90^\circ - ${dg(90 - x)} = ${dg(x)}`), t`Zauważ: ${M(`${K('BCD')} = ${K('BAC')}`)} — trójkąty ${M('ACD')}, ${M('CBD')} i ${M('ABC')} mają takie same kąty.`],
+      answer: M(`${K('ACD')} = ${dg(90 - x)},\\quad ${K('BCD')} = ${dg(x)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C']], segs: [['C', 'D', 'h']], pos: { D: [0, -1] },
+        angs: [{ v: 'C', a: 'A', b: 'B', right: 1 }, { v: 'D', a: 'B', b: 'C', right: 1 }, { v: 'A', a: 'B', b: 'C', t: x + '°' }, { v: 'C', a: 'A', b: 'D', t: '?', hl: 1, sol: (90 - x) + '°', r: 36 }, { v: 'C', a: 'D', b: 'B', t: '?', hl: 1, sol: x + '°', r: 36 }] } });
+  }
+]
+};
+/* ---------- TWIERDZENIE PITAGORASA ---------- */
+const LU = (s, v, u = 'cm') => M(t`${L(s)} = ${typeof v === 'number' ? T(v) : rt(v)}\ \text{${u}}`);
+const rhombP = (p, q) => ({ A: [-p, 0], B: [0, -q], C: [p, 0], D: [0, q], _S: [0, 0] });
+const GP = {
+1: [
+  function hypotenuse() {
+    let a, b, c, m;
+    if (Math.random() < 0.75) { [a, b, c] = legs(pick(TRIPLES)); m = c * c; } else { do { a = ri(1, 7); b = ri(2, 8); } while (a === b || isInt(Math.sqrt(a * a + b * b))); m = a * a + b * b; c = R(1, m); }
+    return mk({ skill: 'twierdzenie Pitagorasa',
+      text: t`Przyprostokątne trójkąta prostokątnego ${M('ABC')} mają długości ${LU('BC', a)} i ${LU('AC', b)}. Oblicz długość przeciwprostokątnej ${M('AB')}.`,
+      fields: [FU(M(L('AB') + ' ='), c, 'cm')],
+      hints: [t`Twierdzenie Pitagorasa: suma kwadratów przyprostokątnych jest równa kwadratowi przeciwprostokątnej, ${M('a^2 + b^2 = c^2')}.`, t`Policz ${M(`${a}^2 + ${b}^2`)}, a potem wyciągnij pierwiastek.`],
+      steps: [M(t`${L('AB')}^2 = ${a}^2 + ${b}^2 = ${a * a} + ${b * b} = ${m}`), M(t`${L('AB')} = ${sq(m)}\ \text{cm}`)],
+      answer: LU('AB', c) + '.',
+      fig: rtFig(a, b, [Lb('B', 'C', a + ' cm'), Lb('C', 'A', b + ' cm'), Q('A', 'B', c, { sol: rx(c) + ' cm' })]) });
+  },
+  function legLen() {
+    const [a, b, c] = legs(pick(TRIPLES));
+    return mk({ skill: 'twierdzenie Pitagorasa',
+      text: t`Przeciwprostokątna ${M('AB')} trójkąta prostokątnego ${M('ABC')} ma długość ${UN(c, 'cm')}, a przyprostokątna ${M('BC')} ma długość ${UN(a, 'cm')}. Oblicz długość przyprostokątnej ${M('AC')}.`,
+      fields: [FU(M(L('AC') + ' ='), b, 'cm')],
+      hints: [t`Twierdzenie Pitagorasa: ${M(`${L('BC')}^2 + ${L('AC')}^2 = ${L('AB')}^2`)}.`, t`Szukasz przyprostokątnej, więc od kwadratu przeciwprostokątnej odejmij kwadrat znanej przyprostokątnej.`],
+      steps: [M(t`${L('AC')}^2 = ${c}^2 - ${a}^2 = ${c * c} - ${a * a} = ${b * b}`), M(t`${L('AC')} = \sqrt{${b * b}} = ${b}\ \text{cm}`)],
+      answer: LU('AC', b) + '.',
+      fig: rtFig(a, b, [Lb('B', 'C', a + ' cm'), Q('C', 'A', b, { sol: b + ' cm' }), Lb('A', 'B', c + ' cm')]) });
+  },
+  function rectDiagonal() {
+    if (Math.random() < 0.6) {
+      const [hh, w, d] = pick(TRIPLES);
+      return mk({ skill: 'przekątna prostokąta',
+        text: t`Prostokąt ma boki długości ${UN(w, 'cm')} i ${UN(hh, 'cm')}. Oblicz długość przekątnej tego prostokąta.`,
+        fields: [FU('przekątna:', d, 'cm')],
+        hints: [t`Przekątna dzieli prostokąt na dwa trójkąty prostokątne. Boki prostokąta są przyprostokątnymi, a przekątna — przeciwprostokątną.`],
+        steps: [M(t`d^2 = ${w}^2 + ${hh}^2 = ${w * w} + ${hh * hh} = ${d * d}`), M(t`d = \sqrt{${d * d}} = ${d}\ \text{cm}`)],
+        answer: t`Przekątna ma ${UN(d, 'cm')}.`,
+        fig: { P: { A: [0, 0], B: [w, 0], C: [w, hh], D: [0, hh] }, polys: [['A', 'B', 'C', 'D']], segs: [['A', 'C', 'h']], angs: [{ v: 'B', a: 'C', b: 'A', right: 1 }],
+          lens: [Lb('A', 'B', w + ' cm'), Lb('B', 'C', hh + ' cm'), Q('A', 'C', d, { t: 'd', sol: d + ' cm', s: -1 })] } });
+    }
+    const a = ri(2, 12), d = R(a, 2);
+    return mk({ skill: 'przekątna kwadratu',
+      text: t`Kwadrat ma bok długości ${UN(a, 'cm')}. Oblicz długość przekątnej tego kwadratu.`,
+      fields: [FU('przekątna:', d, 'cm')],
+      hints: [t`Przekątna dzieli kwadrat na dwa trójkąty prostokątne o przyprostokątnych ${M(a)} i ${M(a)}.`, t`Wynik zostaw z pierwiastkiem: ${M(t`\sqrt{2a^2} = a\sqrt2`)}.`],
+      steps: [M(t`d^2 = ${a}^2 + ${a}^2 = ${2 * a * a}`), M(t`d = \sqrt{${2 * a * a}} = ${rt(d)}\ \text{cm}`)],
+      answer: t`Przekątna ma ${UN(rt(d), 'cm')}.`,
+      fig: { P: { A: [0, 0], B: [a, 0], C: [a, a], D: [0, a] }, polys: [['A', 'B', 'C', 'D']], segs: [['A', 'C', 'h']], angs: [{ v: 'B', a: 'C', b: 'A', right: 1 }],
+        lens: [Lb('A', 'B', a + ' cm'), Q('A', 'C', d, { t: 'd', sol: rx(d) + ' cm', s: -1 })] } });
+  },
+  function ladder() {
+    const [x, y, c] = pick([[0.6, 0.8, 1], [0.7, 2.4, 2.5], [1.2, 1.6, 2], [1.5, 2, 2.5], [0.9, 1.2, 1.5], [1.4, 4.8, 5], [1.8, 2.4, 3], [1, 2.4, 2.6], [2.1, 2.8, 3.5], [1.5, 3.6, 3.9]]);
+    const s2 = v => +(v * v).toFixed(4), v = ri(1, 3);
+    const cfg = {
+      1: { text: t`Drabinę o długości ${UN(c, 'm')} oparto o pionową ścianę. Dolny koniec drabiny jest odsunięty od ściany o ${UN(x, 'm')}. Na jakiej wysokości górny koniec drabiny dotyka ściany?`, f: FU('wysokość:', y, 'm'),
+        st: M(t`h^2 = ${T(c)}^2 - ${T(x)}^2 = ${T(s2(c))} - ${T(s2(x))} = ${T(s2(y))} \;\Rightarrow\; h = ${T(y)}\ \text{m}`), ans: t`Drabina dotyka ściany na wysokości ${UN(y, 'm')}.` },
+      2: { text: t`Górny koniec drabiny opartej o pionową ścianę jest na wysokości ${UN(y, 'm')}, a dolny koniec jest odsunięty od ściany o ${UN(x, 'm')}. Jaką długość ma drabina?`, f: FU('długość:', c, 'm'),
+        st: M(t`d^2 = ${T(x)}^2 + ${T(y)}^2 = ${T(s2(x))} + ${T(s2(y))} = ${T(s2(c))} \;\Rightarrow\; d = ${T(c)}\ \text{m}`), ans: t`Drabina ma ${UN(c, 'm')} długości.` },
+      3: { text: t`Drabinę o długości ${UN(c, 'm')} oparto o pionową ścianę tak, że jej górny koniec jest na wysokości ${UN(y, 'm')}. W jakiej odległości od ściany stoi dolny koniec drabiny?`, f: FU('odległość:', x, 'm'),
+        st: M(t`x^2 = ${T(c)}^2 - ${T(y)}^2 = ${T(s2(c))} - ${T(s2(y))} = ${T(s2(x))} \;\Rightarrow\; x = ${T(x)}\ \text{m}`), ans: t`Dolny koniec stoi ${UN(x, 'm')} od ściany.` }
+    }[v];
+    return mk({ skill: 'Pitagoras w praktyce', text: cfg.text, fields: [cfg.f],
+      hints: [t`Ściana, podłoga i drabina tworzą trójkąt prostokątny — drabina jest przeciwprostokątną.`, t`Liczby dziesiętne podnoś do kwadratu ostrożnie, np. ${M(t`0{,}7^2 = 0{,}49`)}.`],
+      steps: [t`Ściana jest prostopadła do podłogi, więc z twierdzenia Pitagorasa:`, cfg.st], answer: cfg.ans,
+      fig: { P: { _C: O0, _A: [x, 0], _B: [0, y], _w: [0, y * 1.2], _g0: [-0.25 * x, 0], _g: [x * 1.6 + 0.2, 0] }, segs: [['_C', '_w'], ['_g0', '_g'], ['_A', '_B', 'h']], angs: [{ v: '_C', a: '_A', b: '_B', right: 1 }],
+        lens: [v === 3 ? Q('_C', '_A', x, { sol: txt(x) + ' m', s: 1 }) : Lb('_C', '_A', txt(x) + ' m', { s: 1 }), v === 1 ? Q('_C', '_B', y, { t: 'h', sol: txt(y) + ' m', s: -1 }) : Lb('_C', '_B', txt(y) + ' m', { s: -1 }),
+          v === 2 ? Q('_A', '_B', c, { sol: txt(c) + ' m' }) : Lb('_A', '_B', txt(c) + ' m')] } });
+  }
+],
+2: [
+  function equilateral() {
+    const a = 2 * ri(1, 10), h = R(a / 2, 3), Pv = R(a * a / 4, 3);
+    return mk({ skill: 'trójkąt równoboczny',
+      text: t`Trójkąt równoboczny ma bok długości ${UN(a, 'cm')}. Oblicz wysokość i pole tego trójkąta.`,
+      fields: [FU(M('h ='), h, 'cm'), FU(M('P ='), Pv, 'cm²')],
+      hints: [t`Wysokość dzieli trójkąt równoboczny na dwa trójkąty prostokątne o przeciwprostokątnej ${M(a)} i przyprostokątnej ${M(a / 2)}. Użyj twierdzenia Pitagorasa albo wzoru ${M(t`h = \frac{a\sqrt3}{2}`)}.`, t`Pole: ${M(t`P = \tfrac12\cdot a\cdot h`)} albo ${M(t`P = \frac{a^2\sqrt3}{4}`)}.`],
+      steps: [M(t`h^2 = ${a}^2 - ${a / 2}^2 = ${a * a} - ${a * a / 4} = ${3 * a * a / 4} \;\Rightarrow\; h = ${sq(3 * a * a / 4)}\ \text{cm}`), M(t`P = \tfrac12\cdot ${a}\cdot ${rt(h)} = ${rt(Pv)}\ \text{cm}^2`)],
+      answer: M(t`h = ${rt(h)}\ \text{cm},\quad P = ${rt(Pv)}\ \text{cm}^2`),
+      fig: { P: { A: [0, 0], B: [a, 0], C: [a / 2, a * Math.sqrt(3) / 2], H: [a / 2, 0] }, hide: ['H'], polys: [['A', 'B', 'C']], segs: [['C', 'H', 'd']],
+        ticks: [['A', 'B', 1], ['B', 'C', 1], ['C', 'A', 1]], angs: [{ v: 'H', a: 'B', b: 'C', right: 1 }],
+        lens: [Lb('C', 'A', a + ' cm'), Q('C', 'H', h, { t: 'h', s: -1, at: 0.45, sol: rx(h) + ' cm' })] } });
+  },
+  function isoscelesHeight() {
+    const [x, h, c] = pick([[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [6, 8, 10], [8, 6, 10], [8, 15, 17], [9, 12, 15], [12, 9, 15], [7, 24, 25]]);
+    const a = 2 * x, Pv = x * h;
+    return mk({ skill: 'trójkąt równoramienny i Pitagoras',
+      text: t`Podstawa trójkąta równoramiennego ma długość ${UN(a, 'cm')}, a ramię ma długość ${UN(c, 'cm')}. Oblicz wysokość opuszczoną na podstawę oraz pole tego trójkąta.`,
+      fields: [FU(M('h ='), h, 'cm'), FU('pole:', Pv, 'cm²')],
+      hints: [t`Wysokość opuszczona na podstawę dzieli ją na połowy. Powstają dwa trójkąty prostokątne o przyprostokątnej ${M(x)} i przeciwprostokątnej ${M(c)}.`, t`Pole: ${M(t`P = \tfrac12\cdot a\cdot h`)}.`],
+      steps: [M(t`h^2 = ${c}^2 - ${x}^2 = ${c * c} - ${x * x} = ${h * h} \;\Rightarrow\; h = ${h}\ \text{cm}`), M(t`P = \tfrac12\cdot ${a}\cdot ${h} = ${Pv}\ \text{cm}^2`)],
+      answer: t`${M(t`h = ${h}\ \text{cm}`)}, pole ${UN(Pv, 'cm²')}.`,
+      fig: { P: { A: [0, 0], B: [a, 0], C: [x, h], H: [x, 0] }, hide: ['H'], polys: [['A', 'B', 'C']], segs: [['C', 'H', 'd']], ticks: [['A', 'C', 1], ['B', 'C', 1]], angs: [{ v: 'H', a: 'B', b: 'C', right: 1 }],
+        lens: [Lb('A', 'B', a + ' cm', { at: 0.3 }), Lb('C', 'A', c + ' cm'), Q('C', 'H', h, { t: 'h', s: -1, at: 0.45, sol: h + ' cm' })] } });
+  },
+  function special() {
+    if (Math.random() < 0.55) {
+      const k = ri(2, 9), V = { BC: k, AB: 2 * k, AC: R(k, 3) }, given = pick(['AB', 'BC']), ask = ['AB', 'BC', 'AC'].filter(s => s !== given);
+      const st = given === 'AB' ? [t`${M('BC')} leży naprzeciw kąta ${M(dg(30))}, więc jest połową przeciwprostokątnej: ${M(t`${L('BC')} = \tfrac12\cdot ${2 * k} = ${k}\ \text{cm}`)}.`, t`${M(t`${L('AC')} = ${L('BC')}\cdot\sqrt3 = ${k}\sqrt3\ \text{cm}`)} (albo z twierdzenia Pitagorasa: ${M(t`\sqrt{${4 * k * k} - ${k * k}} = \sqrt{${3 * k * k}}`)}).`]
+        : [t`${M('BC')} leży naprzeciw kąta ${M(dg(30))}, więc przeciwprostokątna jest dwa razy dłuższa: ${M(t`${L('AB')} = 2\cdot ${k} = ${2 * k}\ \text{cm}`)}.`, M(t`${L('AC')} = ${L('BC')}\cdot\sqrt3 = ${k}\sqrt3\ \text{cm}`)];
+      const ends = { BC: ['B', 'C'], AC: ['C', 'A'], AB: ['A', 'B'] };
+      return mk({ skill: 'trójkąt 30°, 60°, 90°',
+        text: t`${RIGHT_C}, a kąt ${M('BAC')} ma miarę ${M(dg(30))}. Wiadomo, że ${LU(given, V[given])}. Oblicz długości dwóch pozostałych boków tego trójkąta.`,
+        fields: ask.map(s => FU(M(L(s) + ' ='), V[s], 'cm')),
+        hints: [t`Trójkąt o kątach ${M(t`30^\circ, 60^\circ, 90^\circ`)} to połowa trójkąta równobocznego. Przyprostokątna naprzeciw kąta ${M(dg(30))} jest dwa razy krótsza od przeciwprostokątnej.`, t`Druga przyprostokątna jest ${M(t`\sqrt3`)} razy dłuższa od krótszej (to wysokość trójkąta równobocznego).`],
+        steps: st, answer: M(ask.map(s => t`${L(s)} = ${rt(V[s])}\ \text{cm}`).join(',\\quad ')),
+        fig: rtFig(k, k * Math.sqrt(3), ['BC', 'AC', 'AB'].map(s => (s === given ? Lb(ends[s][0], ends[s][1], rx(V[s]) + ' cm') : Q(ends[s][0], ends[s][1], V[s], { sol: rx(V[s]) + ' cm' }))), [{ v: 'A', a: 'B', b: 'C', t: '30°' }]) });
+    }
+    if (Math.random() < 0.5) {
+      const k = ri(2, 10), c = R(k, 2);
+      return mk({ skill: 'trójkąt 45°, 45°, 90°',
+        text: t`Przyprostokątne trójkąta prostokątnego równoramiennego mają długość ${UN(k, 'cm')}. Oblicz długość przeciwprostokątnej i pole tego trójkąta.`,
+        fields: [FU('przeciwprostokątna:', c, 'cm'), FU('pole:', k * k / 2, 'cm²')],
+        hints: [t`Trójkąt prostokątny równoramienny to połowa kwadratu — przeciwprostokątna jest przekątną kwadratu o boku ${M(k)}: ${M(t`a\sqrt2`)}.`, t`Pole: połowa iloczynu przyprostokątnych.`],
+        steps: [M(t`c^2 = ${k}^2 + ${k}^2 = ${2 * k * k} \;\Rightarrow\; c = ${sq(2 * k * k)}\ \text{cm}`), M(t`P = \tfrac12\cdot ${k}\cdot ${k} = ${T(k * k / 2)}\ \text{cm}^2`)],
+        answer: t`Przeciwprostokątna ${UN(rt(c), 'cm')}, pole ${UN(k * k / 2, 'cm²')}.`,
+        fig: rtFig(k, k, [Lb('B', 'C', k + ' cm'), Lb('C', 'A', k + ' cm'), Q('A', 'B', c, { sol: rx(c) + ' cm' })], [{ v: 'A', a: 'B', b: 'C', t: '45°' }], { ticks: [['B', 'C', 1], ['C', 'A', 1]] }) });
+    }
+    const m = ri(1, 6), c = 2 * m, leg = R(m, 2);
+    return mk({ skill: 'trójkąt 45°, 45°, 90°',
+      text: t`Przeciwprostokątna trójkąta prostokątnego równoramiennego ma długość ${UN(c, 'cm')}. Oblicz długość przyprostokątnej tego trójkąta.`,
+      fields: [FU('przyprostokątna:', leg, 'cm')],
+      hints: [t`Jeśli przyprostokątna ma długość ${M('a')}, to przeciwprostokątna ma długość ${M(t`a\sqrt{2}`)}.`, t`Albo z twierdzenia Pitagorasa: ${M(`a^2 + a^2 = ${c}^2`)}, czyli ${M(`2a^2 = ${c * c}`)}.`],
+      steps: [M(t`a^2 + a^2 = ${c}^2 \;\Rightarrow\; 2a^2 = ${c * c} \;\Rightarrow\; a^2 = ${c * c / 2}`), M(t`a = ${sq(c * c / 2)}\ \text{cm}`)],
+      answer: t`Przyprostokątna ma ${UN(rt(leg), 'cm')}.`,
+      fig: rtFig(m * Math.SQRT2, m * Math.SQRT2, [Q('B', 'C', leg, { t: 'a', sol: rx(leg) + ' cm' }), Lb('A', 'B', c + ' cm')], [{ v: 'A', a: 'B', b: 'C', t: '45°' }], { ticks: [['B', 'C', 1], ['C', 'A', 1]] }) });
+  },
+  function gridSegment() {
+    const dx = ri(1, 6), dy = ri(1, 5), ax = ri(0, 7 - dx), ay = ri(0, 5 - dy), up = Math.random() < 0.5;
+    const A = [ax, up ? ay : ay + dy], B = [ax + dx, up ? ay + dy : ay], m = dx * dx + dy * dy, len = R(1, m);
+    return mk({ skill: 'długość odcinka na kratkach',
+      text: t`Odcinek ${M('AB')} narysowano na kratkach o boku ${UN(1, 'cm')} (jak na rysunku). Oblicz długość tego odcinka.`,
+      fields: [FU(M(L('AB') + ' ='), len, 'cm')],
+      hints: [t`Dorysuj trójkąt prostokątny: odcinek ${M('AB')} jest jego przeciwprostokątną, a przyprostokątne biegną wzdłuż linii kratek.`, t`Policz kratki: przyprostokątne mają ${UN(dx, 'cm')} i ${UN(dy, 'cm')}.`],
+      steps: [t`Przyprostokątne dorysowanego trójkąta mają ${UN(dx, 'cm')} i ${UN(dy, 'cm')}.`, M(t`${L('AB')}^2 = ${dx}^2 + ${dy}^2 = ${dx * dx} + ${dy * dy} = ${m}`), M(t`${L('AB')} = ${sq(m)}\ \text{cm}`)],
+      answer: LU('AB', len) + '.',
+      fig: { P: { A, B, _K: [B[0], A[1]] }, grid: [0, 0, 7, 5], segs: [['A', 'B', 'h'], ['A', '_K', 'ds'], ['_K', 'B', 'ds']], dots: ['A', 'B'], angs: [{ v: '_K', a: 'A', b: 'B', right: 1, so: 1 }] } });
+  }
+],
+3: [
+  function rhombus() {
+    const [p, q, s] = pick([[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [5, 12, 13], [12, 5, 13], [8, 15, 17], [9, 12, 15], [12, 9, 15]]);
+    const e = 2 * p, f = 2 * q, Pv = e * f / 2, byDiag = Math.random() < 0.5, base = { P: rhombP(p, q), polys: [['A', 'B', 'C', 'D']], segs: [['A', 'C', 'd'], ['B', 'D', 'd']], angs: [{ v: '_S', a: 'C', b: 'D', right: 1 }] };
+    if (byDiag) return mk({ skill: 'romb i Pitagoras',
+      text: t`Przekątne rombu ${M('ABCD')} mają długości ${LU('AC', e)} i ${LU('BD', f)}. Oblicz długość boku i obwód tego rombu.`,
+      fields: [FU('bok:', s, 'cm'), FU('obwód:', 4 * s, 'cm')],
+      hints: [t`Przekątne rombu są prostopadłe i dzielą się na połowy. Dzielą romb na cztery przystające trójkąty prostokątne.`, t`Przyprostokątne takiego trójkąta mają ${M(p)} i ${M(q)}, a przeciwprostokątna jest bokiem rombu.`],
+      steps: [M(t`\tfrac12\cdot ${e} = ${p},\qquad \tfrac12\cdot ${f} = ${q}`), M(t`a^2 = ${p}^2 + ${q}^2 = ${p * p} + ${q * q} = ${s * s} \;\Rightarrow\; a = ${s}\ \text{cm}`), M(t`\text{Ob} = 4\cdot ${s} = ${4 * s}\ \text{cm}`)],
+      answer: t`Bok ${UN(s, 'cm')}, obwód ${UN(4 * s, 'cm')}.`,
+      fig: Object.assign(base, { lens: [Lb('A', 'C', e + ' cm', { at: 0.25, s: 1 }), Lb('B', 'D', f + ' cm', { at: 0.78, s: -1 }), Q('D', 'C', s, { t: 'a', sol: s + ' cm' })] }) });
+    return mk({ skill: 'romb i Pitagoras',
+      text: t`Bok rombu ${M('ABCD')} ma długość ${UN(s, 'cm')}, a przekątna ${M('AC')} ma długość ${UN(e, 'cm')}. Oblicz długość przekątnej ${M('BD')} i pole rombu.`,
+      fields: [FU(M(L('BD') + ' ='), f, 'cm'), FU('pole:', Pv, 'cm²')],
+      hints: [t`Przekątne rombu są prostopadłe i dzielą się na połowy: ${M(t`\left(\tfrac{e}{2}\right)^2 + \left(\tfrac{f}{2}\right)^2 = a^2`)}.`, t`Pole rombu: ${M(t`P = \frac{e\cdot f}{2}`)}.`],
+      steps: [M(t`\left(\tfrac{f}{2}\right)^2 = ${s}^2 - ${p}^2 = ${s * s - p * p} \;\Rightarrow\; \tfrac{f}{2} = ${q} \;\Rightarrow\; ${L('BD')} = ${f}\ \text{cm}`), M(t`P = \frac{${e}\cdot ${f}}{2} = ${Pv}\ \text{cm}^2`)],
+      answer: t`${LU('BD', f)}, pole ${UN(Pv, 'cm²')}.`,
+      fig: Object.assign(base, { lens: [Lb('A', 'C', e + ' cm', { at: 0.25, s: 1 }), Q('B', 'D', f, { at: 0.78, s: -1, sol: f + ' cm' }), Lb('D', 'C', s + ' cm')] }) });
+  },
+  function isoTrapezoid() {
+    const [x, h, c] = pick([[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [5, 12, 13], [12, 5, 13], [9, 12, 15], [8, 15, 17]]);
+    const b = ri(3, 12), a = b + 2 * x, Pv = (a + b) / 2 * h;
+    return mk({ skill: 'trapez równoramienny i Pitagoras',
+      text: t`Trapez równoramienny ${M('ABCD')} ma podstawy ${LU('AB', a)} i ${LU('CD', b)} oraz ramiona długości ${UN(c, 'cm')}. Oblicz wysokość i pole tego trapezu.`,
+      fields: [FU(M('h ='), h, 'cm'), FU('pole:', Pv, 'cm²')],
+      hints: [t`Poprowadź wysokości z wierzchołków ${M('D')} i ${M('C')}. Odcinają one na dłuższej podstawie dwa odcinki długości ${M(t`\frac{a - b}{2}`)}.`, t`Wysokość policzysz z twierdzenia Pitagorasa w trójkącie ${M('AHD')}. Pole: ${M(t`P = \frac{a + b}{2}\cdot h`)}.`],
+      steps: [M(t`${L('AH')} = \frac{${a} - ${b}}{2} = ${x}\ \text{cm}`), M(t`h^2 = ${c}^2 - ${x}^2 = ${c * c} - ${x * x} = ${h * h} \;\Rightarrow\; h = ${h}\ \text{cm}`), M(t`P = \frac{${a} + ${b}}{2}\cdot ${h} = ${T(Pv)}\ \text{cm}^2`)],
+      answer: t`${M(t`h = ${h}\ \text{cm}`)}, pole ${UN(Pv, 'cm²')}.`,
+      fig: { P: { A: [0, 0], B: [a, 0], C: [x + b, h], D: [x, h], H: [x, 0], _G: [x + b, 0] }, polys: [['A', 'B', 'C', 'D']], segs: [['D', 'H', 'd'], ['C', '_G', 'd']],
+        angs: [{ v: 'H', a: 'B', b: 'D', right: 1 }], ticks: [['A', 'D', 1], ['B', 'C', 1]], pos: { H: [0.3, -1] },
+        lens: [Lb('A', 'B', a + ' cm', { at: 0.62 }), Lb('D', 'C', b + ' cm'), Lb('A', 'D', c + ' cm'), Q('D', 'H', h, { t: 'h', s: -1, sol: h + ' cm' })] } });
+  },
+  function coordinates() {
+    const [dx0, dy0] = pick([[3, 4], [4, 3], [6, 8], [8, 6], [2, 3], [1, 4], [5, 2], [4, 4], [6, 3], [2, 6], [5, 5], [7, 1], [3, 6], [4, 1]]);
+    const dx = pick([1, -1]) * dx0, dy = pick([1, -1]) * dy0;
+    const xa = ri(Math.max(-6, -6 - dx), Math.min(6, 6 - dx)), ya = ri(Math.max(-5, -5 - dy), Math.min(5, 5 - dy)), xb = xa + dx, yb = ya + dy;
+    const m = dx * dx + dy * dy, len = R(1, m), xs0 = (xa + xb) / 2, ys0 = (ya + yb) / 2, pt = (x, y) => `(${T(x)},\\ ${T(y)})`;
+    return mk({ skill: 'odcinek w układzie współrzędnych',
+      text: t`Dane są punkty ${M(`A = ${pt(xa, ya)}`)} i ${M(`B = ${pt(xb, yb)}`)}. Oblicz długość odcinka ${M('AB')} oraz współrzędne jego środka ${M('S')}.`,
+      fields: [F(M(L('AB') + ' ='), len), F(M('x_S ='), xs0), F(M('y_S ='), ys0)],
+      hints: [t`Dorysuj trójkąt prostokątny o przyprostokątnych ${M(`|x_B - x_A|`)} i ${M(`|y_B - y_A|`)} — odcinek ${M('AB')} jest jego przeciwprostokątną.`, t`Środek odcinka ma współrzędne będące średnimi: ${M(t`x_S = \frac{x_A + x_B}{2},\ y_S = \frac{y_A + y_B}{2}`)}.`],
+      steps: [t`Przyprostokątne: ${M(`|${xb} - ${P(xa)}| = ${dx0}`)} i ${M(`|${yb} - ${P(ya)}| = ${dy0}`)}.`, M(t`${L('AB')}^2 = ${dx0}^2 + ${dy0}^2 = ${m} \;\Rightarrow\; ${L('AB')} = ${sq(m)}`),
+        M(t`x_S = \frac{${xa} + ${P(xb)}}{2} = ${T(xs0)},\qquad y_S = \frac{${ya} + ${P(yb)}}{2} = ${T(ys0)}`)],
+      answer: M(`${L('AB')} = ${rt(len)},\\quad S = ${pt(xs0, ys0)}`),
+      fig: { P: { A: [xa, ya], B: [xb, yb], _K: [xb, ya], _S: [xs0, ys0] }, grid: [-6, -5, 6, 5], segs: [[[-6, 0], [6, 0], 'l'], [[0, -5], [0, 5], 'l'], ['A', 'B', 'h'], ['A', '_K', 'ds'], ['_K', 'B', 'ds']],
+        dots: ['A', 'B', { p: '_S', so: 1 }], txt: [{ p: [6.45, 0], t: 'x', c: 'ft' }, { p: [0, 5.45], t: 'y', c: 'ft' }, { p: [-0.35, -0.4], t: '0', c: 'ft' }, { p: add([xs0, ys0], [0.45, 0.45]), t: '', sol: 'S', so: 1 }] } });
+  },
+  function equation() {
+    const [a, b, c] = pick([[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29], [9, 40, 41], [12, 35, 37], [6, 8, 10], [9, 12, 15], [12, 16, 20], [15, 20, 25], [10, 24, 26]]);
+    const d = c - b;
+    return mk({ skill: 'Pitagoras i równanie',
+      text: t`Jedna z przyprostokątnych trójkąta prostokątnego ma długość ${UN(a, 'cm')}, a przeciwprostokątna jest o ${UN(d, 'cm')} dłuższa od drugiej przyprostokątnej. Oblicz długość drugiej przyprostokątnej i przeciwprostokątnej.`,
+      fields: [FU('druga przyprostokątna:', b, 'cm'), FU('przeciwprostokątna:', c, 'cm')],
+      hints: [t`Oznacz drugą przyprostokątną przez ${M('x')}. Przeciwprostokątna ma wtedy ${M(`x + ${d}`)}. Zapisz twierdzenie Pitagorasa.`, t`${M(`(x + ${d})^2 = (x + ${d})(x + ${d}) = x^2 + ${2 * d}x + ${d * d}`)} — wyrazy ${M('x^2')} po obu stronach się skrócą.`],
+      steps: [M(t`${a}^2 + x^2 = (x + ${d})^2`), M(t`${a * a} + x^2 = x^2 + ${2 * d}x + ${d * d}`), M(t`${2 * d}x = ${a * a - d * d} \;\Rightarrow\; x = ${b}`), t`Przeciwprostokątna: ${M(`${b} + ${d} = ${c}`)}. Sprawdzenie: ${M(`${a}^2 + ${b}^2 = ${a * a + b * b} = ${c}^2`)}.`],
+      answer: t`Druga przyprostokątna ma ${UN(b, 'cm')}, a przeciwprostokątna ${UN(c, 'cm')}.`,
+      fig: rtFig(a, b, [Lb('B', 'C', a + ' cm'), Q('C', 'A', b, { t: 'x', sol: b + ' cm' }), Q('A', 'B', c, { t: 'x + ' + d, sol: c + ' cm' })]),
+      verify: () => a * a + b * b === c * c });
+  }
+]
+};
+/* ---------- CZWOROKĄTY I WIELOKĄTY ---------- */
+const rectP = (w, h) => ({ A: [0, 0], B: [w, 0], C: [w, h], D: [0, h] });
+function regPoly(n, r = 3, names) { const P0 = {}; for (let i = 0; i < n; i++) P0[names ? names[i] : '_P' + i] = onC(O0, r, (names ? 180 : 90) + 360 * i / n * (names ? 1 : -1)); return P0; }
+const GC = {
+1: [
+  function rectangle() {
+    const v = ri(1, 3);
+    if (v === 2) {
+      const a = ri(2, 15), O = 4 * a;
+      return mk({ skill: 'kwadrat — pole i obwód',
+        text: t`Obwód kwadratu jest równy ${UN(O, 'cm')}. Oblicz długość boku i pole tego kwadratu.`,
+        fields: [FU('bok:', a, 'cm'), FU('pole:', a * a, 'cm²')],
+        hints: [t`Kwadrat ma cztery równe boki, więc bok to ${M(t`\text{Ob} : 4`)}.`, t`Pole kwadratu: ${M('P = a^2')}.`],
+        steps: [M(t`a = ${O} : 4 = ${a}\ \text{cm}`), M(t`P = ${a}^2 = ${a * a}\ \text{cm}^2`)],
+        answer: t`Bok ${UN(a, 'cm')}, pole ${UN(a * a, 'cm²')}.`,
+        fig: { P: rectP(a, a), polys: [['A', 'B', 'C', 'D']], ticks: [['A', 'B', 1], ['B', 'C', 1], ['C', 'D', 1], ['D', 'A', 1]], lens: [Q('A', 'B', a, { t: 'a', sol: a + ' cm' })] } });
+    }
+    let a, b; do { a = ri(3, 15); b = ri(2, 12); } while (a === b);
+    if (v === 1) return mk({ skill: 'prostokąt — pole i obwód',
+      text: t`Prostokąt ma boki długości ${UN(a, 'cm')} i ${UN(b, 'cm')}. Oblicz pole i obwód tego prostokąta.`,
+      fields: [FU('pole:', a * b, 'cm²'), FU('obwód:', 2 * (a + b), 'cm')],
+      hints: [t`Pole prostokąta: ${M(t`P = a\cdot b`)}. Obwód: ${M(t`\text{Ob} = 2a + 2b`)}.`],
+      steps: [M(t`P = ${a}\cdot ${b} = ${a * b}\ \text{cm}^2`), M(t`\text{Ob} = 2\cdot ${a} + 2\cdot ${b} = ${2 * (a + b)}\ \text{cm}`)],
+      answer: t`Pole ${UN(a * b, 'cm²')}, obwód ${UN(2 * (a + b), 'cm')}.`,
+      fig: { P: rectP(a, b), polys: [['A', 'B', 'C', 'D']], lens: [Lb('A', 'B', a + ' cm'), Lb('B', 'C', b + ' cm')] } });
+    const O = 2 * (a + b);
+    return mk({ skill: 'prostokąt — pole i obwód',
+      text: t`Obwód prostokąta jest równy ${UN(O, 'cm')}, a jeden z jego boków ma długość ${UN(a, 'cm')}. Oblicz długość drugiego boku i pole tego prostokąta.`,
+      fields: [FU('drugi bok:', b, 'cm'), FU('pole:', a * b, 'cm²')],
+      hints: [t`Połowa obwodu to suma długości dwóch sąsiednich boków: ${M(t`a + b = \text{Ob} : 2`)}.`],
+      steps: [M(t`a + b = ${O} : 2 = ${a + b}\ \text{cm}`), M(t`b = ${a + b} - ${a} = ${b}\ \text{cm}`), M(t`P = ${a}\cdot ${b} = ${a * b}\ \text{cm}^2`)],
+      answer: t`Drugi bok ${UN(b, 'cm')}, pole ${UN(a * b, 'cm²')}.`,
+      fig: { P: rectP(a, b), polys: [['A', 'B', 'C', 'D']], lens: [Lb('A', 'B', a + ' cm'), Q('B', 'C', b, { t: 'b', sol: b + ' cm' })] } });
+  },
+  function areaFormulas() {
+    const v = ri(1, 3);
+    if (v === 1) {
+      const a = ri(5, 14), h = ri(2, 9), off = ri(1, 4);
+      return mk({ skill: 'pole równoległoboku',
+        text: t`Bok ${M('AB')} równoległoboku ${M('ABCD')} ma długość ${UN(a, 'cm')}, a wysokość opuszczona na ten bok ma ${UN(h, 'cm')}. Oblicz pole tego równoległoboku.`,
+        fields: [FU('pole:', a * h, 'cm²')],
+        hints: [t`Pole równoległoboku: ${M(t`P = a\cdot h`)}, gdzie ${M('h')} to wysokość opuszczona na bok ${M('a')}.`],
+        steps: [M(t`P = ${a}\cdot ${h} = ${a * h}\ \text{cm}^2`)],
+        answer: t`Pole jest równe ${UN(a * h, 'cm²')}.`,
+        fig: { P: { A: [0, 0], B: [a, 0], C: [a + off, h], D: [off, h], _H: [off, 0] }, polys: [['A', 'B', 'C', 'D']], segs: [['D', '_H', 'd']], angs: [{ v: '_H', a: 'B', b: 'D', right: 1 }], lens: [Lb('A', 'B', a + ' cm'), Lb('D', '_H', h + ' cm', { s: 1 })] } });
+    }
+    if (v === 2) {
+      let p, q; do { p = ri(2, 8); q = ri(2, 8); } while (p === q || Math.max(p, q) > 2 * Math.min(p, q));
+      const e = 2 * p, f = 2 * q;
+      return mk({ skill: 'pole rombu',
+        text: t`Przekątne rombu mają długości ${UN(e, 'cm')} i ${UN(f, 'cm')}. Oblicz pole tego rombu.`,
+        fields: [FU('pole:', e * f / 2, 'cm²')],
+        hints: [t`Pole rombu to połowa iloczynu długości przekątnych: ${M(t`P = \frac{e\cdot f}{2}`)}.`],
+        steps: [M(t`P = \frac{${e}\cdot ${f}}{2} = ${e * f / 2}\ \text{cm}^2`)],
+        answer: t`Pole jest równe ${UN(e * f / 2, 'cm²')}.`,
+        fig: { P: rhombP(p, q), polys: [['A', 'B', 'C', 'D']], segs: [['A', 'C', 'd'], ['B', 'D', 'd']], angs: [{ v: '_S', a: 'C', b: 'D', right: 1 }], lens: [Lb('A', 'C', e + ' cm', { at: 0.25, s: 1 }), Lb('B', 'D', f + ' cm', { at: 0.78, s: -1 })] } });
+    }
+    const a = ri(8, 18), b = ri(3, a - 3), h = ri(2, 9), Pv = (a + b) / 2 * h, dx = (a - b) * pick([0.3, 0.5, 0.7]);
+    return mk({ skill: 'pole trapezu',
+      text: t`Podstawy trapezu mają długości ${UN(a, 'cm')} i ${UN(b, 'cm')}, a jego wysokość jest równa ${UN(h, 'cm')}. Oblicz pole tego trapezu.`,
+      fields: [FU('pole:', Pv, 'cm²')],
+      hints: [t`Pole trapezu: ${M(t`P = \frac{a + b}{2}\cdot h`)} — średnia długość podstaw razy wysokość.`],
+      steps: [M(t`P = \frac{${a} + ${b}}{2}\cdot ${h} = ${T((a + b) / 2)}\cdot ${h} = ${T(Pv)}\ \text{cm}^2`)],
+      answer: t`Pole jest równe ${UN(Pv, 'cm²')}.`,
+      fig: { P: { A: [0, 0], B: [a, 0], C: [dx + b, h], D: [dx, h], _H: [dx, 0] }, polys: [['A', 'B', 'C', 'D']], segs: [['D', '_H', 'd']], angs: [{ v: '_H', a: 'B', b: 'D', right: 1 }], par: [['A', 'B', 0.86], ['D', 'C']],
+        lens: [Lb('A', 'B', a + ' cm'), Lb('D', 'C', b + ' cm'), Lb('D', '_H', h + ' cm', { s: 1 })] } });
+  },
+  function quadAngles() {
+    if (Math.random() < 0.5) {
+      let a, b, c, d, D0, C0;
+      for (;;) {
+        a = ri(60, 125); b = ri(60, 125); c = ri(60, 125); d = 360 - a - b - c;
+        if (d < 55 || d > 145) continue;
+        D0 = onC(O0, 4, a); const dB = onC(O0, 1, 180 - b), dD = onC(O0, 1, 360 - b - c); C0 = meet([6, 0], add([6, 0], dB), D0, add(D0, dD));
+        const okB = (C0[0] - 6) * dB[0] + C0[1] * dB[1], okD = (D0[0] - C0[0]) * dD[0] + (D0[1] - C0[1]) * dD[1];
+        if (okB > 1.5 && okD > 1.5) break;
+      }
+      return mk({ skill: 'suma kątów czworokąta',
+        text: t`Trzy kąty czworokąta ${M('ABCD')} mają miary ${andJ([a, b, c].map(v => M(dg(v))))}. Oblicz miarę czwartego kąta.`,
+        fields: [FD(M(K('ADC') + ' ='), d)],
+        hints: [t`Suma kątów każdego czworokąta jest równa ${M(dg(360))} — przekątna dzieli go na dwa trójkąty.`],
+        steps: [M(t`${K('ADC')} = 360^\circ - ${dg(a)} - ${dg(b)} - ${dg(c)} = ${dg(d)}`)],
+        answer: M(`${K('ADC')} = ${dg(d)}`),
+        fig: { P: { A: O0, B: [6, 0], C: C0, D: D0 }, polys: [['A', 'B', 'C', 'D']], angs: [{ v: 'A', a: 'B', b: 'D', t: a + '°' }, { v: 'B', a: 'C', b: 'A', t: b + '°' }, { v: 'C', a: 'D', b: 'B', t: c + '°' }, { v: 'D', a: 'A', b: 'C', t: '?', hl: 1, sol: d + '°' }] } });
+    }
+    let al; do { al = ri(30, 150); } while (Math.abs(al - 90) < 10);
+    const P0 = { A: O0, B: [6, 0], D: onC(O0, 3.5, al) }; P0.C = add(P0.B, P0.D);
+    return mk({ skill: 'kąty równoległoboku',
+      text: t`W równoległoboku ${M('ABCD')} kąt ${M('DAB')} ma miarę ${M(dg(al))}. Oblicz miary pozostałych kątów tego równoległoboku.`,
+      fields: [FD(M(K('ABC') + ' ='), 180 - al), FD(M(K('BCD') + ' ='), al), FD(M(K('CDA') + ' ='), 180 - al)],
+      hints: [t`W równoległoboku kąty przy jednym boku mają razem ${M(dg(180))}.`, t`Kąty leżące naprzeciw siebie (przeciwległe) są równe.`],
+      steps: [M(t`${K('ABC')} = 180^\circ - ${dg(al)} = ${dg(180 - al)}`), t`Kąty przeciwległe: ${M(`${K('BCD')} = ${K('DAB')} = ${dg(al)}`)}, ${M(`${K('CDA')} = ${K('ABC')} = ${dg(180 - al)}`)}.`],
+      answer: M(`${K('ABC')} = ${K('CDA')} = ${dg(180 - al)},\\quad ${K('BCD')} = ${dg(al)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C', 'D']], par: [['A', 'B'], ['D', 'C']], angs: [{ v: 'A', a: 'B', b: 'D', t: al + '°' }, { v: 'B', a: 'C', b: 'A', t: '?', hl: 1, sol: (180 - al) + '°' }, { v: 'C', a: 'D', b: 'B', t: '?', hl: 1, sol: al + '°' }, { v: 'D', a: 'A', b: 'C', t: '?', hl: 1, sol: (180 - al) + '°' }] } });
+  },
+  function units() {
+    if (Math.random() < 0.55) {
+      const W = 10 * ri(4, 30), H = 10 * ri(2, 15), m2 = W * H;
+      return mk({ skill: 'jednostki pola',
+        text: t`Prostokątna działka ma wymiary ${UN(W, 'm')} na ${UN(H, 'm')}. Oblicz jej pole w metrach kwadratowych, w arach i w hektarach.`,
+        fields: [FU('pole:', m2, 'm²'), FU('pole:', m2 / 100, 'a'), FU('pole:', m2 / 10000, 'ha')],
+        hints: [t`${M(t`1\ \text{a} = 100\ \text{m}^2`)} (kwadrat ${M(t`10\ \text{m} \times 10\ \text{m}`)}).`, t`${M(t`1\ \text{ha} = 100\ \text{a} = 10\,000\ \text{m}^2`)} (kwadrat ${M(t`100\ \text{m} \times 100\ \text{m}`)}).`],
+        steps: [M(t`P = ${W}\cdot ${H} = ${N(m2)}\ \text{m}^2`), M(t`${N(m2)}\ \text{m}^2 = ${N(m2)} : 100\ \text{a} = ${T(m2 / 100)}\ \text{a}`), M(t`${N(m2)}\ \text{m}^2 = ${N(m2)} : 10\,000\ \text{ha} = ${T(m2 / 10000)}\ \text{ha}`)],
+        answer: t`${UN(N(m2), 'm²')} = ${UN(m2 / 100, 'a')} = ${UN(m2 / 10000, 'ha')}.`,
+        fig: { P: rectP(W, H), polys: [['A', 'B', 'C', 'D']], hide: ['A', 'B', 'C', 'D'], lens: [Lb('A', 'B', W + ' m'), Lb('B', 'C', H + ' m')] } });
+    }
+    const am = ri(6, 25) / 10, bc = 10 * ri(2, 9), acm = Math.round(am * 100), cm2 = acm * bc;
+    return mk({ skill: 'jednostki pola',
+      text: t`Prostokąt ma wymiary ${UN(am, 'm')} i ${UN(bc, 'cm')}. Oblicz jego pole w centymetrach kwadratowych i w metrach kwadratowych.`,
+      fields: [FU('pole:', cm2, 'cm²'), FU('pole:', cm2 / 10000, 'm²')],
+      hints: [t`Najpierw zamień wymiary na te same jednostki: ${M(t`1\ \text{m} = 100\ \text{cm}`)}.`, t`${M(t`1\ \text{m}^2 = 100\ \text{cm} \cdot 100\ \text{cm} = 10\,000\ \text{cm}^2`)}.`],
+      steps: [M(t`${T(am)}\ \text{m} = ${acm}\ \text{cm}`), M(t`P = ${acm}\cdot ${bc} = ${N(cm2)}\ \text{cm}^2`), M(t`${N(cm2)}\ \text{cm}^2 = ${N(cm2)} : 10\,000\ \text{m}^2 = ${T(cm2 / 10000)}\ \text{m}^2`)],
+      answer: t`${UN(N(cm2), 'cm²')} = ${UN(cm2 / 10000, 'm²')}.` });
+  }
+],
+2: [
+  function trapezoidAngles() {
+    if (Math.random() < 0.5) {
+      const al = ri(40, 80), u = 3 / Math.tan(rad(al)), P0 = { A: O0, B: [8, 0], D: [u, 3], C: [8 - u, 3] };
+      return mk({ skill: 'kąty trapezu równoramiennego',
+        text: t`W trapezie równoramiennym ${M('ABCD')} kąt ostry ${M('DAB')} ma miarę ${M(dg(al))}. Oblicz miary pozostałych kątów tego trapezu.`,
+        fields: [FD(M(K('ABC') + ' ='), al), FD(M(K('BCD') + ' ='), 180 - al), FD(M(K('CDA') + ' ='), 180 - al)],
+        hints: [t`W trapezie równoramiennym kąty przy tej samej podstawie są równe.`, t`Kąty przy tym samym ramieniu mają razem ${M(dg(180))}, bo ${M(t`AB \parallel CD`)}.`],
+        steps: [t`Kąty przy podstawie ${M('AB')} są równe: ${M(`${K('ABC')} = ${dg(al)}`)}.`, M(t`${K('CDA')} = 180^\circ - ${dg(al)} = ${dg(180 - al)},\qquad ${K('BCD')} = ${K('CDA')} = ${dg(180 - al)}`)],
+        answer: M(`${K('ABC')} = ${dg(al)},\\quad ${K('BCD')} = ${K('CDA')} = ${dg(180 - al)}`),
+        fig: { P: P0, polys: [['A', 'B', 'C', 'D']], par: [['A', 'B'], ['D', 'C']], ticks: [['A', 'D', 1], ['B', 'C', 1]],
+          angs: [{ v: 'A', a: 'B', b: 'D', t: al + '°' }, { v: 'B', a: 'C', b: 'A', t: '?', hl: 1, sol: al + '°' }, { v: 'C', a: 'D', b: 'B', t: '?', hl: 1, sol: (180 - al) + '°' }, { v: 'D', a: 'A', b: 'C', t: '?', hl: 1, sol: (180 - al) + '°' }] } });
+    }
+    let a, b; do { a = ri(40, 85); b = ri(40, 85); } while (Math.abs(a - b) < 6);
+    const P0 = { A: O0, B: [8, 0], D: [3 / Math.tan(rad(a)), 3], C: [8 - 3 / Math.tan(rad(b)), 3] };
+    return mk({ skill: 'kąty trapezu',
+      text: t`W trapezie ${M('ABCD')} podstawy ${M('AB')} i ${M('CD')} są równoległe, ${M(`${K('DAB')} = ${dg(a)}`)} oraz ${M(`${K('ABC')} = ${dg(b)}`)}. Oblicz miary kątów ${M('ADC')} i ${M('BCD')}.`,
+      fields: [FD(M(K('ADC') + ' ='), 180 - a), FD(M(K('BCD') + ' ='), 180 - b)],
+      hints: [t`Kąty przy tym samym ramieniu trapezu mają razem ${M(dg(180))} — to kąty przy prostych równoległych ${M('AB')} i ${M('CD')}.`],
+      steps: [M(t`${K('ADC')} = 180^\circ - ${dg(a)} = ${dg(180 - a)}`), M(t`${K('BCD')} = 180^\circ - ${dg(b)} = ${dg(180 - b)}`)],
+      answer: M(`${K('ADC')} = ${dg(180 - a)},\\quad ${K('BCD')} = ${dg(180 - b)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C', 'D']], par: [['A', 'B'], ['D', 'C']], angs: [{ v: 'A', a: 'B', b: 'D', t: a + '°' }, { v: 'B', a: 'C', b: 'A', t: b + '°' }, { v: 'D', a: 'A', b: 'C', t: '?', hl: 1, sol: (180 - a) + '°' }, { v: 'C', a: 'D', b: 'B', t: '?', hl: 1, sol: (180 - b) + '°' }] } });
+  },
+  function lShape() {
+    const W = ri(7, 14), H = ri(5, 10), w = ri(2, W - 4), h = ri(2, H - 3), Pv = W * H - w * h, U = Math.random() < 0.4, Ob = 2 * (W + H) + (U ? 2 * h : 0);
+    let P0, poly, cut, lens;
+    if (!U) {
+      P0 = { _A: [0, 0], _B: [W, 0], _C: [W, H - h], _D: [W - w, H - h], _E: [W - w, H], _F: [0, H], _N: [W, H] };
+      poly = ['_A', '_B', '_C', '_D', '_E', '_F']; cut = [['_E', '_N', 'd'], ['_N', '_C', 'd']]; lens = [Lb('_A', '_B', W + ' cm'), Lb('_F', '_A', H + ' cm'), Lb('_C', '_D', w + ' cm', { s: 1 }), Lb('_D', '_E', h + ' cm', { s: -1 })];
+    } else {
+      const x0 = ri(1, W - w - 1);
+      P0 = { _A: [0, 0], _B: [W, 0], _C: [W, H], _D: [x0 + w, H], _E: [x0 + w, H - h], _F: [x0, H - h], _G: [x0, H], _H: [0, H] };
+      poly = ['_A', '_B', '_C', '_D', '_E', '_F', '_G', '_H']; cut = [['_G', '_D', 'd']]; /* głębokość wcięcia opisujemy po tej stronie, gdzie jest więcej miejsca */
+      lens = [Lb('_A', '_B', W + ' cm'), Lb('_B', '_C', H + ' cm'), Lb('_E', '_F', w + ' cm', { s: 1 }), x0 >= W - x0 - w ? Lb('_F', '_G', h + ' cm', { s: -1 }) : Lb('_D', '_E', h + ' cm', { s: -1 })];
+    }
+    return mk({ skill: 'pole i obwód figury złożonej',
+      text: t`Figurę na rysunku otrzymano, wycinając z prostokąta o wymiarach ${UN(W, 'cm')} na ${UN(H, 'cm')} prostokąt o wymiarach ${UN(w, 'cm')} na ${UN(h, 'cm')}. Oblicz pole i obwód tej figury.`,
+      fields: [FU('pole:', Pv, 'cm²'), FU('obwód:', Ob, 'cm')],
+      hints: [t`Pole: od pola dużego prostokąta odejmij pole wyciętego prostokąta.`, U ? t`Obwód: poziome odcinki dają razem tyle, co dwa boki dużego prostokąta, ale wcięcie dokłada dwa pionowe odcinki po ${UN(h, 'cm')}.` : t`Obwód: przesuń w myślach odcinki „wcięcia” na zewnątrz — obwód jest taki sam jak obwód całego prostokąta.`],
+      steps: [M(t`P = ${W}\cdot ${H} - ${w}\cdot ${h} = ${W * H} - ${w * h} = ${Pv}\ \text{cm}^2`), U ? M(t`\text{Ob} = 2\cdot ${W} + 2\cdot ${H} + 2\cdot ${h} = ${Ob}\ \text{cm}`) : M(t`\text{Ob} = ${W} + ${H - h} + ${w} + ${h} + ${W - w} + ${H} = ${Ob}\ \text{cm}`)],
+      answer: t`Pole ${UN(Pv, 'cm²')}, obwód ${UN(Ob, 'cm')}.`,
+      fig: { P: P0, polys: [poly], segs: cut, lens } });
+  },
+  function regularPolygon() {
+    const n = pick([5, 6, 8, 9, 10, 12]), nm = { 5: 'pięciokąta', 6: 'sześciokąta', 8: 'ośmiokąta', 9: 'dziewięciokąta', 10: 'dziesięciokąta', 12: 'dwunastokąta' }[n];
+    const sum = (n - 2) * 180, ang = sum / n;
+    return mk({ skill: 'wielokąty foremne',
+      text: t`Oblicz sumę miar kątów wewnętrznych ${nm} foremnego oraz miarę jednego jego kąta.`,
+      fields: [FD('suma kątów:', sum), FD('jeden kąt:', ang)],
+      hints: [t`Przekątne poprowadzone z jednego wierzchołka dzielą ${M('n')}-kąt na ${M('n - 2')} trójkąty, a każdy trójkąt ma ${M(dg(180))}.`, t`Wielokąt foremny ma wszystkie kąty równe — podziel sumę przez liczbę kątów.`],
+      steps: [t`Przekątne z jednego wierzchołka dzielą ${nm.replace(/a$/, '')} na ${M(n - 2)} ${n - 2 <= 4 ? 'trójkąty' : 'trójkątów'}: ${M(t`S = (${n} - 2)\cdot 180^\circ = ${dg(sum)}`)}.`, M(t`\text{jeden kąt} = ${dg(sum)} : ${n} = ${dg(ang)}`)],
+      answer: t`Suma ${M(dg(sum))}, jeden kąt ${M(dg(ang))}.`,
+      fig: { P: regPoly(n), polys: [Array.from({ length: n }, (_, i) => '_P' + i)], segs: Array.from({ length: n - 3 }, (_, i) => ['_P0', '_P' + (i + 2), 'ds']), angs: [{ v: '_P0', a: '_P1', b: '_P' + (n - 1), t: '?', hl: 1, sol: ang + '°' }] } });
+  },
+  function rhombusAngles() {
+    if (Math.random() < 0.55) {
+      const al = 2 * ri(15, 40), P0 = rhombP(4 * cos(al / 2), 4 * sin(al / 2)); P0.S = O0;
+      return mk({ skill: 'kąty w rombie',
+        text: t`W rombie ${M('ABCD')} kąt ${M('DAB')} ma miarę ${M(dg(al))}. Przekątne rombu przecinają się w punkcie ${M('S')}. Oblicz miary kątów trójkąta ${M('ABS')}.`,
+        fields: [FD(M(K('BAS') + ' ='), al / 2), FD(M(K('ABS') + ' ='), 90 - al / 2), FD(M(K('ASB') + ' ='), 90)],
+        hints: [t`Przekątne rombu są prostopadłe.`, t`Przekątne rombu dzielą jego kąty na połowy (są dwusiecznymi kątów rombu).`],
+        steps: [t`Przekątne są prostopadłe: ${M(`${K('ASB')} = 90^\\circ`)}.`, t`Przekątna ${M('AC')} dzieli kąt ${M('DAB')} na połowy: ${M(`${K('BAS')} = ${dg(al / 2)}`)}.`, M(t`${K('ABS')} = 180^\circ - 90^\circ - ${dg(al / 2)} = ${dg(90 - al / 2)}`)],
+        answer: M(`${K('BAS')} = ${dg(al / 2)},\\ ${K('ABS')} = ${dg(90 - al / 2)},\\ ${K('ASB')} = 90^\\circ`),
+        fig: { P: P0, hide: ['_S'], polys: [['A', 'B', 'C', 'D']], segs: [['A', 'C', 'd'], ['B', 'D', 'd']], pos: { S: [0.8, 0.6] },
+          angs: [{ v: 'A', a: 'B', b: 'D', t: al + '°', r: 52, at: 0.8 }, { v: 'A', a: 'B', b: 'S', t: '?', hl: 1, sol: al / 2 + '°', r: 30 }, { v: 'B', a: 'S', b: 'A', t: '?', hl: 1, sol: (90 - al / 2) + '°' }, { v: 'S', a: 'A', b: 'B', t: '?', hl: 1, sol: '90°' }] } });
+    }
+    let al, be; do { al = ri(50, 110); be = ri(20, 60); } while (al + be > 150 || be > al - 10);
+    const P0 = { A: O0, B: [6, 0] }; P0.D = meet(P0.A, onC(O0, 1, al), P0.B, add(P0.B, onC(O0, 1, 180 - be))); P0.C = add(P0.B, P0.D); const g = 180 - al - be;
+    return mk({ skill: 'kąty w równoległoboku',
+      text: t`W równoległoboku ${M('ABCD')} kąt ${M('DAB')} ma miarę ${M(dg(al))}, a przekątna ${M('BD')} tworzy z bokiem ${M('AB')} kąt o mierze ${M(dg(be))}. Oblicz miary kątów ${M('ADB')}, ${M('DBC')} i ${M('BCD')}.`,
+      fields: [FD(M(K('ADB') + ' ='), g), FD(M(K('DBC') + ' ='), g), FD(M(K('BCD') + ' ='), al)],
+      hints: [t`Policz trzeci kąt trójkąta ${M('ABD')}.`, t`Proste ${M('AD')} i ${M('BC')} są równoległe, więc kąty ${M('ADB')} i ${M('DBC')} są naprzemianległe. Przeciwległe kąty równoległoboku są równe.`],
+      steps: [M(t`${K('ADB')} = 180^\circ - ${dg(al)} - ${dg(be)} = ${dg(g)}`), t`Kąty naprzemianległe (${M(t`AD \parallel BC`)}): ${M(`${K('DBC')} = ${K('ADB')} = ${dg(g)}`)}.`, t`Kąty przeciwległe: ${M(`${K('BCD')} = ${K('DAB')} = ${dg(al)}`)}.`],
+      answer: M(`${K('ADB')} = ${K('DBC')} = ${dg(g)},\\quad ${K('BCD')} = ${dg(al)}`),
+      fig: { P: P0, polys: [['A', 'B', 'C', 'D']], segs: [['B', 'D', 'h']], par: [['A', 'D', 0.4], ['B', 'C', 0.4]],
+        angs: [{ v: 'A', a: 'B', b: 'D', t: al + '°' }, { v: 'B', a: 'D', b: 'A', t: be + '°', r: 34 }, { v: 'D', a: 'A', b: 'B', t: '?', hl: 1, sol: g + '°' }, { v: 'B', a: 'C', b: 'D', t: '?', hl: 1, sol: g + '°' }, { v: 'C', a: 'D', b: 'B', t: '?', hl: 1, sol: al + '°' }] } });
+  }
+],
+3: [
+  function twoHeightsPar() {
+    let a, b, ha, Pv, hb, cs;
+    for (;;) { b = ri(4, 12); a = ri(b + 1, b + 8); ha = ri(2, b - 1); Pv = a * ha; hb = Pv / b; cs = Math.sqrt(1 - (ha / b) ** 2); if (isInt(hb * 10) && a * cs <= b * 0.95) break; }
+    const P0 = { A: [0, 0], B: [a, 0], D: [b * cs, ha] }; P0.C = add(P0.B, P0.D); P0._H = [b * cs, 0]; P0._G = foot(P0.B, P0.A, P0.D);
+    return mk({ skill: 'pole równoległoboku i wysokości',
+      text: t`Boki równoległoboku ${M('ABCD')} mają długości ${LU('AB', a)} i ${LU('AD', b)}. Wysokość opuszczona na bok ${M('AB')} ma długość ${UN(ha, 'cm')}. Oblicz pole równoległoboku i długość wysokości opuszczonej na bok ${M('AD')}.`,
+      fields: [FU('pole:', Pv, 'cm²'), FU(t`wysokość na ${M('AD')}:`, hb, 'cm')],
+      hints: [t`Pole równoległoboku = bok · wysokość opuszczona na ten bok: ${M(t`P = ${L('AB')}\cdot h_{AB}`)}.`, t`To samo pole policzysz z drugiego boku: ${M(t`P = ${L('AD')}\cdot h_{AD}`)} — wyznacz z tego ${M('h_{AD}')}.`],
+      steps: [M(t`P = ${a}\cdot ${ha} = ${Pv}\ \text{cm}^2`), M(t`${b}\cdot h_{AD} = ${Pv} \;\Rightarrow\; h_{AD} = \frac{${Pv}}{${b}} = ${T(hb)}\ \text{cm}`)],
+      answer: t`Pole ${UN(Pv, 'cm²')}, wysokość ${UN(hb, 'cm')}.`,
+      fig: { P: P0, polys: [['A', 'B', 'C', 'D']], segs: [['D', '_H', 'd'], ['B', '_G', 'h']], angs: [{ v: '_H', a: 'B', b: 'D', right: 1 }, { v: '_G', a: 'D', b: 'B', right: 1 }],
+        lens: [Lb('A', 'B', a + ' cm', { at: 0.7 }), Lb('A', 'D', b + ' cm', { at: 0.75 }), Lb('D', '_H', ha + ' cm', { s: -1 }), Q('B', '_G', hb, { t: 'h', s: -1, sol: txt(hb) + ' cm' })] } });
+  },
+  function scalePlan() {
+    const S = pick([100, 200, 500, 1000, 2000]); let a, b; do { a = ri(2, 9); b = ri(2, 9); } while (a === b);
+    const A = a * S / 100, B = b * S / 100, Pm = A * B, big = Math.max(a, b), sm = Math.min(a, b);
+    return mk({ skill: 'skala i pole',
+      text: t`Na planie w skali ${M(`1 : ${N(S)}`)} działka ma kształt prostokąta o wymiarach ${UN(a, 'cm')} na ${UN(b, 'cm')}. Oblicz rzeczywiste wymiary działki (w metrach) i jej rzeczywiste pole (w metrach kwadratowych).`,
+      fields: [FU('dłuższy bok:', big * S / 100, 'm'), FU('krótszy bok:', sm * S / 100, 'm'), FU('pole:', Pm, 'm²')],
+      hints: [t`Skala ${M(`1 : ${N(S)}`)} oznacza, że ${M(t`1\ \text{cm}`)} na planie to ${M(N(S) + t`\ \text{cm} = ` + N(S / 100) + t`\ \text{m}`)} w rzeczywistości.`, t`Najpierw policz rzeczywiste wymiary, a dopiero potem pole. Pole nie rośnie ${M(N(S))} razy, tylko ${M(`${N(S)}^2`)} razy!`],
+      steps: [M(t`${big}\ \text{cm} \to ${big}\cdot ${N(S / 100)}\ \text{m} = ${N(big * S / 100)}\ \text{m},\qquad ${sm}\ \text{cm} \to ${N(sm * S / 100)}\ \text{m}`), M(t`P = ${N(A)}\cdot ${N(B)} = ${N(Pm)}\ \text{m}^2`)],
+      answer: t`Wymiary ${UN(N(big * S / 100), 'm')} na ${UN(N(sm * S / 100), 'm')}, pole ${UN(N(Pm), 'm²')}.`,
+      fig: { P: rectP(big, sm), polys: [['A', 'B', 'C', 'D']], hide: ['A', 'B', 'C', 'D'], lens: [Lb('A', 'B', big + ' cm'), Lb('B', 'C', sm + ' cm')] } });
+  },
+  function hexagon() {
+    const a = ri(2, 10), Pv = R(3 * a * a / 2, 3), P0 = regPoly(6, a, ['A', 'B', 'C', 'D', 'E', 'F']); P0._S = O0;
+    return mk({ skill: 'sześciokąt foremny',
+      text: t`Sześciokąt foremny ${M('ABCDEF')} ma bok długości ${UN(a, 'cm')}. Oblicz obwód i pole tego sześciokąta oraz długość jego dłuższej przekątnej ${M('AD')}.`,
+      fields: [FU('obwód:', 6 * a, 'cm'), FU('pole:', Pv, 'cm²'), FU(M(L('AD') + ' ='), 2 * a, 'cm')],
+      hints: [t`Sześciokąt foremny składa się z sześciu trójkątów równobocznych o boku ${M(a)}.`, t`Pole trójkąta równobocznego: ${M(t`\frac{a^2\sqrt3}{4}`)}. Dłuższa przekątna to dwa boki takiego trójkąta.`],
+      steps: [M(t`\text{Ob} = 6\cdot ${a} = ${6 * a}\ \text{cm}`), M(t`P = 6\cdot\frac{${a}^2\sqrt3}{4} = \frac{${6 * a * a}\sqrt3}{4} = ${rt(Pv)}\ \text{cm}^2`), M(t`${L('AD')} = 2\cdot ${a} = ${2 * a}\ \text{cm}`)],
+      answer: t`Obwód ${UN(6 * a, 'cm')}, pole ${UN(rt(Pv), 'cm²')}, ${LU('AD', 2 * a)}.`,
+      fig: { P: P0, polys: [['A', 'B', 'C', 'D', 'E', 'F']], segs: [['A', 'D', 'd'], ['B', 'E', 'ds'], ['C', 'F', 'ds']], dots: ['_S'], lens: [Lb('A', 'F', a + ' cm'), Q('A', 'D', 2 * a, { at: 0.75, s: -1, sol: 2 * a + ' cm' })] } });
+  },
+  function ratioRectangle() {
+    if (Math.random() < 0.5) {
+      const [p, q] = pick([[1, 2], [2, 3], [3, 4], [1, 3], [2, 5], [3, 5], [4, 5], [1, 4]]), x = ri(1, 6), a = p * x, b = q * x, O = 2 * (a + b);
+      return mk({ skill: 'prostokąt i stosunek boków',
+        text: t`Boki prostokąta są w stosunku ${M(`${p} : ${q}`)}, a jego obwód jest równy ${UN(O, 'cm')}. Oblicz długości boków i pole tego prostokąta.`,
+        fields: [FU('krótszy bok:', a, 'cm'), FU('dłuższy bok:', b, 'cm'), FU('pole:', a * b, 'cm²')],
+        hints: [t`Oznacz boki przez ${M(nx(p))} i ${M(nx(q))}.`, t`Obwód: ${M(`2\\cdot ${nx(p)} + 2\\cdot ${nx(q)} = ${O}`)}.`],
+        steps: [M(t`2\cdot ${nx(p)} + 2\cdot ${nx(q)} = ${O} \;\Rightarrow\; ${2 * (p + q)}x = ${O} \;\Rightarrow\; x = ${x}`), M(t`a = ${p === 1 ? '' : p + '\\cdot '}${x} = ${a}\ \text{cm},\qquad b = ${q}\cdot ${x} = ${b}\ \text{cm}`), M(t`P = ${a}\cdot ${b} = ${a * b}\ \text{cm}^2`)],
+        answer: t`Boki ${UN(a, 'cm')} i ${UN(b, 'cm')}, pole ${UN(a * b, 'cm²')}.`,
+        fig: { P: rectP(b, a), polys: [['A', 'B', 'C', 'D']], hide: ['A', 'B', 'C', 'D'], lens: [Q('A', 'B', b, { t: nx(q), sol: b + ' cm' }), Q('B', 'C', a, { t: nx(p), sol: a + ' cm' })] } });
+    }
+    const d = ri(2, 8), b = ri(3, 12), a = b + d, O = 2 * (a + b);
+    return mk({ skill: 'prostokąt i równanie',
+      text: t`Jeden bok prostokąta jest o ${UN(d, 'cm')} dłuższy od drugiego, a obwód prostokąta jest równy ${UN(O, 'cm')}. Oblicz długości boków i pole tego prostokąta.`,
+      fields: [FU('krótszy bok:', b, 'cm'), FU('dłuższy bok:', a, 'cm'), FU('pole:', a * b, 'cm²')],
+      hints: [t`Oznacz krótszy bok przez ${M('x')}. Dłuższy ma ${M(`x + ${d}`)}.`, t`Obwód: ${M(`2x + 2(x + ${d}) = ${O}`)}.`],
+      steps: [M(t`2x + 2(x + ${d}) = ${O} \;\Rightarrow\; 4x + ${2 * d} = ${O} \;\Rightarrow\; 4x = ${O - 2 * d} \;\Rightarrow\; x = ${b}`), t`Boki: ${UN(b, 'cm')} i ${M(`${b} + ${d} = ${a}`)} cm.`, M(t`P = ${a}\cdot ${b} = ${a * b}\ \text{cm}^2`)],
+      answer: t`Boki ${UN(b, 'cm')} i ${UN(a, 'cm')}, pole ${UN(a * b, 'cm²')}.`,
+      fig: { P: rectP(a, b), polys: [['A', 'B', 'C', 'D']], hide: ['A', 'B', 'C', 'D'], lens: [Q('A', 'B', a, { t: 'x + ' + d, sol: a + ' cm' }), Q('B', 'C', b, { t: 'x', sol: b + ' cm' })] } });
+  }
+]
+};
+/* ---------- KOŁO I OKRĄG ---------- */
+const PI_HELP = 'Liczbę π wpisz przyciskiem π albo jako pi, np. 12π lub 12pi. Ułamek: 9π/2.';
+const PI314_HELP = 'Wynik podaj jako liczbę dziesiętną z przecinkiem, np. 31,4.';
+const kpi = k => (k === 1 ? '' : T(k)) + t`\pi`, kpiTxt = k => (k === 1 ? '' : txt(k)) + 'π';
+const circFig = (r, lab, more) => Object.assign({ P: { S: O0, A: [r, 0], _B: [-r, 0] }, circles: [{ c: 'S', r }], dots: ['S'], pos: { S: [0, 1] }, segs: [['S', 'A']], lens: lab ? [Object.assign({ a: 'S', b: 'A', s: 1 }, lab)] : [] }, more || {});
+const GO = {
+1: [
+  function circleBasic() {
+    const byD = Math.random() < 0.4, r = ri(2, 12);
+    return mk({ skill: 'długość okręgu i pole koła', help: PI_HELP,
+      text: byD ? t`Średnica koła ma długość ${UN(2 * r, 'cm')}. Oblicz długość okręgu, który ogranicza to koło, i pole tego koła.` : t`Promień koła ma długość ${UN(r, 'cm')}. Oblicz długość okręgu, który ogranicza to koło, i pole tego koła.`,
+      fields: [FU('długość okręgu:', R(2 * r, 1, 1), 'cm'), FU('pole koła:', R(r * r, 1, 1), 'cm²')],
+      hints: [t`Długość okręgu: ${M(t`L = 2\pi r`)} (albo ${M(t`L = \pi d`)}). Pole koła: ${M(t`P = \pi r^2`)}.`].concat(byD ? [t`Promień to połowa średnicy.`] : [t`Wynik zostaw z ${M(t`\pi`)} — nie zaokrąglaj.`]),
+      steps: (byD ? [M(t`r = ${2 * r} : 2 = ${r}\ \text{cm}`)] : []).concat([M(t`L = 2\pi\cdot ${r} = ${kpi(2 * r)}\ \text{cm}`), M(t`P = \pi\cdot ${r}^2 = ${kpi(r * r)}\ \text{cm}^2`)]),
+      answer: t`Długość okręgu ${UN(kpi(2 * r), 'cm')}, pole koła ${UN(kpi(r * r), 'cm²')}.`,
+      fig: byD ? circFig(r, null, { segs: [['_B', 'A']], lens: [{ a: '_B', b: 'A', t: 2 * r + ' cm', s: 1 }] }) : circFig(r, { t: r + ' cm' }) });
+  },
+  function circle314() {
+    const r = pick([1, 2, 3, 4, 5, 6, 10, 0.5, 1.5, 2.5]), L = +(6.28 * r).toFixed(4), P = +(3.14 * r * r).toFixed(4);
+    return mk({ skill: 'koło i π ≈ 3,14', help: PI314_HELP,
+      text: t`Promień koła ma długość ${UN(r, 'cm')}. Oblicz długość okręgu, który ogranicza to koło, i pole tego koła. Przyjmij ${M(t`\pi \approx 3{,}14`)}.`,
+      fields: [FPI('długość okręgu:', 2 * r, 'cm'), FPI('pole koła:', r * r, 'cm²')],
+      hints: [t`Długość okręgu: ${M(t`L = 2\pi r`)}, pole koła: ${M(t`P = \pi r^2`)}.`, t`Zamiast ${M(t`\pi`)} wstaw ${M('3{,}14')}.`],
+      steps: [M(t`L = 2\cdot 3{,}14\cdot ${T(r)} = ${T(L)}\ \text{cm}`), M(t`P = 3{,}14\cdot ${T(r)}^2 = 3{,}14\cdot ${T(r * r)} = ${T(P)}\ \text{cm}^2`)],
+      answer: t`${M(t`L \approx ${T(L)}\ \text{cm}`)}, ${M(t`P \approx ${T(P)}\ \text{cm}^2`)}.`,
+      fig: circFig(r, { t: txt(r) + ' cm' }) });
+  },
+  function circleTF() {
+    const r = ri(2, 9), r2 = r * r;
+    const pool = [
+      Math.random() < 0.5 ? { s: t`Długość okręgu o promieniu ${UN(r, 'cm')} jest równa ${UN(kpi(2 * r), 'cm')}.`, v: true, why: M(t`L = 2\pi\cdot ${r} = ${kpi(2 * r)}`) + '.' }
+        : { s: t`Długość okręgu o promieniu ${UN(r, 'cm')} jest równa ${UN(kpi(r2), 'cm')}.`, v: false, why: t`${M(t`L = 2\pi r = ${kpi(2 * r)}`)}, a ${M(kpi(r2))} to pole koła o tym promieniu.` },
+      Math.random() < 0.5 ? { s: t`Pole koła o promieniu ${UN(r, 'cm')} jest równe ${UN(kpi(r2), 'cm²')}.`, v: true, why: M(t`P = \pi\cdot ${r}^2 = ${kpi(r2)}`) + '.' }
+        : { s: t`Pole koła o promieniu ${UN(r, 'cm')} jest równe ${UN(kpi(2 * r), 'cm²')}.`, v: false, why: t`${M(t`P = \pi r^2 = ${kpi(r2)}`)} — promień trzeba podnieść do kwadratu, a nie pomnożyć przez 2.` },
+      Math.random() < 0.5 ? { s: t`Pole koła o średnicy ${UN(2 * r, 'cm')} jest równe ${UN(kpi(4 * r2), 'cm²')}.`, v: false, why: t`Promień to ${UN(r, 'cm')}, więc ${M(t`P = \pi\cdot ${r}^2 = ${kpi(r2)}`)}. Do wzoru wstawia się promień, nie średnicę.` }
+        : { s: t`Pole koła o średnicy ${UN(2 * r, 'cm')} jest równe ${UN(kpi(r2), 'cm²')}.`, v: true, why: t`Promień to ${UN(r, 'cm')}, więc ${M(t`P = \pi\cdot ${r}^2 = ${kpi(r2)}`)}.` },
+      { s: 'Średnica jest najdłuższą cięciwą okręgu.', v: true, why: 'Każda inna cięciwa jest krótsza od średnicy — średnica przechodzi przez środek okręgu.' },
+      { s: 'Promień okręgu jest dwa razy dłuższy od jego średnicy.', v: false, why: 'Jest odwrotnie: średnica jest dwa razy dłuższa od promienia.' }
+    ];
+    const items = shuffle(pool).slice(0, 2);
+    return mk({ skill: 'koło i okrąg — pojęcia', text: PF, tf: items.map(i => ({ s: i.s, v: i.v })),
+      hints: [t`${M(t`d = 2r`)}, ${M(t`L = 2\pi r`)}, ${M(t`P = \pi r^2`)}.`],
+      steps: tfSteps(items), answer: tfAnswer(items) });
+  },
+  function fromCircumference() {
+    const r = ri(2, 12);
+    return mk({ skill: 'promień z długości okręgu', help: PI_HELP,
+      text: t`Okrąg ma długość ${UN(kpi(2 * r), 'cm')}. Oblicz promień tego okręgu i pole koła, które ten okrąg ogranicza.`,
+      fields: [FU(M('r ='), r, 'cm'), FU('pole koła:', R(r * r, 1, 1), 'cm²')],
+      hints: [t`${M(t`L = 2\pi r`)} — wstaw dane i wyznacz ${M('r')}.`, t`Potem ${M(t`P = \pi r^2`)}.`],
+      steps: [M(t`2\pi r = ${kpi(2 * r)} \;\Rightarrow\; r = ${r}\ \text{cm}`), M(t`P = \pi\cdot ${r}^2 = ${kpi(r * r)}\ \text{cm}^2`)],
+      answer: t`${M(t`r = ${r}\ \text{cm}`)}, pole ${UN(kpi(r * r), 'cm²')}.`,
+      fig: circFig(r, { t: 'r', hl: 1, sol: r + ' cm' }) });
+  }
+],
+2: [
+  function fromArea() {
+    const r = ri(2, 12);
+    return mk({ skill: 'promień z pola koła', help: PI_HELP,
+      text: t`Pole koła jest równe ${UN(kpi(r * r), 'cm²')}. Oblicz promień tego koła i długość okręgu, który je ogranicza.`,
+      fields: [FU(M('r ='), r, 'cm'), FU('długość okręgu:', R(2 * r, 1, 1), 'cm')],
+      hints: [t`${M(t`P = \pi r^2`)}, więc ${M(t`r^2 = ${r * r}`)}. Jaka dodatnia liczba podniesiona do kwadratu daje ${M(r * r)}?`, t`Potem ${M(t`L = 2\pi r`)}.`],
+      steps: [M(t`\pi r^2 = ${kpi(r * r)} \;\Rightarrow\; r^2 = ${r * r} \;\Rightarrow\; r = ${r}\ \text{cm}`), M(t`L = 2\pi\cdot ${r} = ${kpi(2 * r)}\ \text{cm}`)],
+      answer: t`${M(t`r = ${r}\ \text{cm}`)}, długość okręgu ${UN(kpi(2 * r), 'cm')}.`,
+      fig: circFig(r, { t: 'r', hl: 1, sol: r + ' cm' }, { circles: [{ c: 'S', r, fill: 's' }, { c: 'S', r }] }) });
+  },
+  function annulus() {
+    const R1 = ri(3, 12), r1 = ri(Math.ceil(0.4 * R1), R1 - 1), byW = Math.random() < 0.4, k = R1 * R1 - r1 * r1;
+    return mk({ skill: 'pierścień kołowy', help: PI_HELP,
+      text: byW ? t`Pierścień kołowy ograniczają dwa okręgi o wspólnym środku. Mniejszy okrąg ma promień ${UN(r1, 'cm')}, a szerokość pierścienia jest równa ${UN(R1 - r1, 'cm')}. Oblicz pole tego pierścienia.`
+        : t`Pierścień kołowy ograniczają dwa okręgi o wspólnym środku i promieniach ${UN(R1, 'cm')} i ${UN(r1, 'cm')}. Oblicz pole tego pierścienia.`,
+      fields: [FU('pole pierścienia:', R(k, 1, 1), 'cm²')],
+      hints: [t`Pole pierścienia = pole dużego koła − pole małego koła = ${M(t`\pi R^2 - \pi r^2`)}.`].concat(byW ? [t`Promień dużego koła to promień małego koła plus szerokość pierścienia.`] : []),
+      steps: (byW ? [M(t`R = ${r1} + ${R1 - r1} = ${R1}\ \text{cm}`)] : []).concat([M(t`P = \pi\cdot ${R1}^2 - \pi\cdot ${r1}^2 = ${kpi(R1 * R1)} - ${kpi(r1 * r1)} = ${kpi(k)}\ \text{cm}^2`)]),
+      answer: t`Pole pierścienia jest równe ${UN(kpi(k), 'cm²')}.`,
+      fig: { P: { _S: O0, _A: onC(O0, R1, 30), _B: [-r1, 0] }, circles: [{ c: '_S', r: R1, fill: 's' }, { c: '_S', r: r1, fill: 'w' }, { c: '_S', r: R1 }, { c: '_S', r: r1 }], dots: ['_S'], segs: [['_S', '_A'], ['_S', '_B']],
+        lens: [Lb('_S', '_A', byW ? 'R' : R1 + ' cm', { at: 0.62, s: -1 }), Lb('_S', '_B', r1 + ' cm', { s: 1 })] } });
+  },
+  function semicircle() {
+    const r = ri(2, 10), d = 2 * r;
+    return mk({ skill: 'półkole', help: 'Wynik wpisz z π, np. 8 + 4π albo 9π/2.',
+      text: t`Figura na rysunku jest półkolem o średnicy ${UN(d, 'cm')}. Oblicz pole i obwód tej figury.`,
+      fields: [FU('pole:', R(r * r / 2, 1, 1), 'cm²'), FX('obwód:', Math.PI * r + d, `${d} + ${kpiTxt(r)}`, 'cm')],
+      hints: [t`Pole półkola to połowa pola koła: ${M(t`P = \tfrac12\pi r^2`)}.`, t`Obwód półkola to połowa okręgu (${M(t`\pi r`)}) i średnica (${M('2r')}).`],
+      steps: [M(t`r = ${d} : 2 = ${r}\ \text{cm}`), M(t`P = \tfrac12\cdot\pi\cdot ${r}^2 = ${rt(R(r * r / 2, 1, 1))}\ \text{cm}^2`), M(t`\text{Ob} = \tfrac12\cdot 2\pi\cdot ${r} + ${d} = ${d} + ${kpi(r)}\ \text{cm}`)],
+      answer: t`Pole ${UN(rt(R(r * r / 2, 1, 1)), 'cm²')}, obwód ${UN(`${d} + ${kpi(r)}`, 'cm')}.`,
+      fig: { P: { _S: O0, _A: [-r, 0], _B: [r, 0] }, sectors: [{ c: '_S', r, a1: 0, a2: 180 }], arcs: [{ c: '_S', r, a1: 0, a2: 180, n: 1 }], segs: [['_A', '_B']], dots: ['_S'], lens: [Lb('_A', '_B', d + ' cm', { s: 1 })] } });
+  },
+  function squareCircle() {
+    const a = 2 * ri(1, 10), r = a / 2;
+    return mk({ skill: 'koło wpisane w kwadrat', help: 'Wynik wpisz z π, np. 16 − 4π.',
+      text: t`W kwadrat o boku ${UN(a, 'cm')} wpisano koło (jak na rysunku). Oblicz pole tego koła oraz pole zacieniowanej części kwadratu, która leży poza kołem.`,
+      fields: [FU('pole koła:', R(r * r, 1, 1), 'cm²'), FX('pole części zacieniowanej:', a * a - Math.PI * r * r, `${a * a} − ${kpiTxt(r * r)}`, 'cm²')],
+      hints: [t`Promień koła wpisanego w kwadrat to połowa boku kwadratu.`, t`Pole części poza kołem = pole kwadratu − pole koła.`],
+      steps: [M(t`r = ${a} : 2 = ${r}\ \text{cm}`), M(t`P_{\text{koła}} = \pi\cdot ${r}^2 = ${kpi(r * r)}\ \text{cm}^2`), M(t`P = ${a}^2 - ${kpi(r * r)} = ${a * a} - ${kpi(r * r)}\ \text{cm}^2`)],
+      answer: t`Pole koła ${UN(kpi(r * r), 'cm²')}, pole części zacieniowanej ${UN(`${a * a} - ${kpi(r * r)}`, 'cm²')}.`,
+      fig: { P: { _A: [-r, -r], _B: [r, -r], _C: [r, r], _D: [-r, r], _S: O0, _M: [r, 0] }, polys: [{ p: ['_A', '_B', '_C', '_D'], c: 's' }], circles: [{ c: '_S', r, fill: 'w' }, { c: '_S', r }], dots: ['_S'], segs: [['_S', '_M', 'ds']],
+        lens: [Lb('_A', '_B', a + ' cm'), { a: '_S', b: '_M', t: '', sol: 'r = ' + r, so: 1, s: 1 }] } });
+  }
+],
+3: [
+  function wheel() {
+    const sevens = Math.random() < 0.5, d = sevens ? pick([35, 42, 56, 63, 70, 84]) : pick([50, 60, 80, 100]);
+    const Lc = sevens ? 22 * d / 7 : +(3.14 * d).toFixed(4), n = pick([100, 200, 250, 500, 1000]), m = +(Lc * n / 100).toFixed(4);
+    const dist = m >= 1000 && isInt(m / 10) ? UN(m / 1000, 'km') : UN(m, 'm');
+    return mk({ skill: 'obroty koła',
+      text: t`Koło roweru ma średnicę ${UN(d, 'cm')}. Ile pełnych obrotów wykona to koło na drodze o długości ${dist}? Przyjmij ${M(sevens ? t`\pi \approx \frac{22}{7}` : t`\pi \approx 3{,}14`)}.`,
+      fields: [F('liczba obrotów:', n)],
+      hints: [t`W czasie jednego obrotu koło przejeżdża drogę równą długości okręgu: ${M(t`L = \pi d`)}.`, t`Zamień drogę na centymetry i podziel ją przez długość okręgu.`],
+      steps: [M(sevens ? t`L = \frac{22}{7}\cdot ${d} = ${T(Lc)}\ \text{cm}` : t`L = 3{,}14\cdot ${d} = ${T(Lc)}\ \text{cm}`), t`Droga: ${dist} ${M(t`= ${N(Math.round(m * 100))}\ \text{cm}`)}.`, M(t`${N(Math.round(m * 100))} : ${T(Lc)} = ${n}`)],
+      answer: t`Koło wykona ${M(n)} obrotów.`,
+      fig: circFig(d / 2, null, { segs: [['_B', 'A']], lens: [{ a: '_B', b: 'A', t: d + ' cm', s: 1 }] }) });
+  },
+  function stadium() {
+    const Lr = 2 * ri(3, 8), d = 2 * ri(1, 4), r = d / 2;
+    return mk({ skill: 'figura złożona z prostokąta i półkoli', help: 'Wynik wpisz z π, np. 20 + 6π.',
+      text: t`Figura na rysunku składa się z prostokąta o wymiarach ${UN(Lr, 'cm')} na ${UN(d, 'cm')} i dwóch półkoli o średnicy ${UN(d, 'cm')}. Oblicz obwód i pole tej figury.`,
+      fields: [FX('obwód:', 2 * Lr + Math.PI * d, `${2 * Lr} + ${kpiTxt(d)}`, 'cm'), FX('pole:', Lr * d + Math.PI * r * r, `${Lr * d} + ${kpiTxt(r * r)}`, 'cm²')],
+      hints: [t`Dwa półkola o tej samej średnicy tworzą razem całe koło o promieniu ${M(T(r))}.`, t`Do obwodu nie wliczaj boków prostokąta, które stykają się z półkolami — obwód to dwa dłuższe boki i cały okrąg.`],
+      steps: [M(t`\text{Ob} = 2\cdot ${Lr} + \pi\cdot ${d} = ${2 * Lr} + ${kpi(d)}\ \text{cm}`), M(t`P = ${Lr}\cdot ${d} + \pi\cdot ${T(r)}^2 = ${Lr * d} + ${kpi(r * r)}\ \text{cm}^2`)],
+      answer: t`Obwód ${UN(`${2 * Lr} + ${kpi(d)}`, 'cm')}, pole ${UN(`${Lr * d} + ${kpi(r * r)}`, 'cm²')}.`,
+      fig: { P: { _A: [0, 0], _B: [Lr, 0], _C: [Lr, d], _D: [0, d], _L: [0, r], _R: [Lr, r] }, polys: [{ p: ['_A', '_B', '_C', '_D'], c: 's nf' }],
+        sectors: [{ c: '_L', r, a1: 90, a2: 270 }, { c: '_R', r, a1: -90, a2: 90 }], arcs: [{ c: '_L', r, a1: 90, a2: 270, n: 1 }, { c: '_R', r, a1: -90, a2: 90, n: 1 }],
+        segs: [['_A', '_B'], ['_D', '_C'], ['_A', '_D', 'd'], ['_B', '_C', 'd']], lens: [Lb('_A', '_B', Lr + ' cm', { s: 1 }), Lb('_A', '_D', d + ' cm', { s: 1 })] } });
+  },
+  function squareInCircle() {
+    const a = 2 * ri(1, 8), k = a * a / 2, h = a / 2;
+    return mk({ skill: 'koło opisane na kwadracie', help: 'Wynik wpisz z π, np. 8π − 16.',
+      text: t`Na kwadracie o boku ${UN(a, 'cm')} opisano koło — wierzchołki kwadratu leżą na okręgu (jak na rysunku). Oblicz pole tego koła oraz pole zacieniowanej części koła, która leży poza kwadratem.`,
+      fields: [FU('pole koła:', R(k, 1, 1), 'cm²'), FX('pole części zacieniowanej:', Math.PI * k - a * a, `${kpiTxt(k)} − ${a * a}`, 'cm²')],
+      hints: [t`Promień koła opisanego na kwadracie to połowa przekątnej kwadratu, a przekątna kwadratu o boku ${M('a')} ma ${M(t`a\sqrt2`)}.`, t`Nie musisz liczyć samego ${M('r')}: wystarczy ${M('r^2')}. Np. ${M(t`\left(\frac{a\sqrt2}{2}\right)^2 = \frac{2a^2}{4} = \frac{a^2}{2}`)}.`],
+      steps: [M(t`d = ${a}\sqrt2\ \text{cm},\qquad r = \frac{${a}\sqrt2}{2} = ${rt(R(h, 2))}\ \text{cm}`), M(t`r^2 = \left(${rt(R(h, 2))}\right)^2 = ${k}`), M(t`P_{\text{koła}} = ${kpi(k)}\ \text{cm}^2,\qquad P = ${kpi(k)} - ${a}^2 = ${kpi(k)} - ${a * a}\ \text{cm}^2`)],
+      answer: t`Pole koła ${UN(kpi(k), 'cm²')}, pole części zacieniowanej ${UN(`${kpi(k)} - ${a * a}`, 'cm²')}.`,
+      fig: { P: { _A: [-h, -h], _B: [h, -h], _C: [h, h], _D: [-h, h], _S: O0 }, circles: [{ c: '_S', r: h * Math.SQRT2, fill: 's' }, { c: '_S', r: h * Math.SQRT2 }], polys: [{ p: ['_A', '_B', '_C', '_D'], c: 'w', top: 1 }], dots: ['_S'],
+        segs: [['_A', '_C', 'ds']], lens: [Lb('_A', '_B', a + ' cm'), { a: '_S', b: '_C', t: '', sol: 'r', so: 1 }] } });
+  },
+  function radiusRatio() {
+    const k = pick([2, 3, 4, 5, 10]), w = { 2: 'dwa', 3: 'trzy', 4: 'cztery', 5: 'pięć', 10: 'dziesięć' }[k];
+    return mk({ skill: 'skala w kole',
+      text: t`Promień jednego koła jest ${w} razy dłuższy od promienia drugiego koła. Ile razy dłuższy jest okrąg większego koła od okręgu mniejszego? Ile razy większe jest pole większego koła od pola mniejszego?`,
+      fields: [F('długość okręgu — ile razy:', k), F('pole koła — ile razy:', k * k)],
+      hints: [t`Oznacz mniejszy promień przez ${M('r')}. Większy ma ${M(`${k}r`)}.`, t`${M(t`L = 2\pi\cdot ${k}r = ${k}\cdot 2\pi r`)}, a ${M(t`P = \pi\cdot (${k}r)^2 = ${k * k}\cdot\pi r^2`)}.`],
+      steps: [t`Mniejsze koło: ${M(t`L_1 = 2\pi r`)}, ${M(t`P_1 = \pi r^2`)}.`, t`Większe koło: ${M(t`L_2 = 2\pi\cdot ${k}r = ${k}\cdot 2\pi r`)}, ${M(t`P_2 = \pi\cdot (${k}r)^2 = ${k * k}\pi r^2`)}.`, t`Okrąg jest ${M(k)} razy dłuższy, a pole ${M(k * k)} razy większe — pole rośnie jak kwadrat promienia.`],
+      answer: t`Okrąg ${M(k)} razy dłuższy, pole ${M(k * k)} razy większe.`,
+      fig: { P: { _S1: O0, _A1: [1, 0], _S2: [1 + 0.6 + Math.min(k, 3), 0] , _A2: [1 + 0.6 + 2 * Math.min(k, 3), 0] }, circles: [{ c: '_S1', r: 1 }, { c: '_S2', r: Math.min(k, 3) }], dots: ['_S1', '_S2'], segs: [['_S1', '_A1'], ['_S2', '_A2']],
+        lens: [Lb('_S1', '_A1', 'r', { s: 1 }), Lb('_S2', '_A2', k + 'r', { s: 1 })] } });
+  }
+]
+};
+
+const BANK = { K: GK, T: GT, P: GP, C: GC, O: GO };
+const TOPIC_NAME = { K: 'Kąty', T: 'Trójkąty', P: 'Twierdzenie Pitagorasa', C: 'Czworokąty i wielokąty', O: 'Koło i okrąg' };
+const LEVEL_NAME = { 1: 'Łatwy', 2: 'Średni', 3: 'Trudny' };
+
+function generate(topic, level, avoid) {
+  const tp = topic === 'X' ? pick(Object.keys(BANK)) : topic, list = BANK[tp][level];
+  let i, tries = 0;
+  do { i = Math.floor(Math.random() * list.length); tries++; } while (list.length > 1 && `${tp}${level}${i}` === avoid && tries < 10);
+  const task = list[i]();
+  task.topic = tp; task.level = level; task.key = `${tp}${level}${i}`;
+  return task;
+}
+
+/* ---- odczyt odpowiedzi: liczby, ułamki, √, π ---- */
+function normalize(raw) {
+  let s = String(raw).toLowerCase().trim().replace(/^[^=]*=/, '');
+  s = s.replace(/[−–—]/g, '-').replace(/[·×⋅]/g, '*').replace(/:/g, '/').replace(/²/g, '^2').replace(/³/g, '^3');
+  s = s.replace(/\s*(stopni|stopnie|stopnia|°|cm|mm|dm|km|ha|m|ary|arów|ar|a|obrotów|obroty|razy|j\.?|jedn\.?)\s*(\^\s*[23])?\s*$/, '');
+  return s.replace(/pierwiastek\s*z|pierw|sqrt|√/g, '√').replace(/pi|π/g, 'π').replace(/,/g, '.').replace(/\s+/g, '');
+}
+function evalExpr(s) {
+  let i = 0;
+  const peek = () => s[i];
+  function num() { const m = /^(\d+(\.\d+)?|\.\d+)/.exec(s.slice(i)); if (!m) throw 0; i += m[0].length; return parseFloat(m[0]); }
+  function primary() {
+    const c = peek();
+    if (c === '(') { i++; const v = expr(); if (peek() !== ')') throw 0; i++; return v; }
+    if (c === 'π') { i++; return Math.PI; }
+    if (c === '√') { i++; const v = power(); if (v < 0) throw 0; return Math.sqrt(v); }
+    return num();
+  }
+  function power() { let v = primary(); if (peek() === '^') { i++; v = Math.pow(v, unary()); } return v; }
+  function unary() { if (peek() === '-') { i++; return -unary(); } if (peek() === '+') { i++; return unary(); } return power(); }
+  function term() {
+    let v = unary();
+    for (;;) {
+      const c = peek();
+      if (c === '*') { i++; v *= unary(); }
+      else if (c === '/') { i++; const d = unary(); if (d === 0) throw 0; v /= d; }
+      else if (c === '(' || c === 'π' || c === '√' || (c !== undefined && /[\d.]/.test(c))) v *= power();
+      else break;
+    }
+    return v;
+  }
+  function expr() { let v = term(); for (;;) { const c = peek(); if (c === '+') { i++; v += term(); } else if (c === '-') { i++; v -= term(); } else break; } return v; }
+  const v = expr(); if (i !== s.length) throw 0; return v;
+}
+function parseNum(raw) { const s = normalize(raw); if (!s) return NaN; try { const v = evalExpr(s); return Number.isFinite(v) ? v : NaN; } catch (e) { return NaN; } }
+function checkField(field, raw) {
+  if (!String(raw).trim()) return 'empty';
+  const v = parseNum(raw);
+  if (Number.isNaN(v)) return 'invalid';
+  const tol = field.tol || 1e-9, eq = x => Math.abs(v - x) <= tol * Math.max(1, Math.abs(x));
+  if (eq(field.ans) || (field.alt || []).some(eq)) return 'ok';
+  const plain = /^-?(\d+(\.\d+)?|\.\d+)$/.test(normalize(raw));
+  if (field.pi != null) return plain && Math.abs(v - field.pi) <= 0.006 * Math.abs(field.pi) ? 'approx' : 'bad';
+  const inexact = Math.abs(field.ans * 1000 - Math.round(field.ans * 1000)) > 1e-6;
+  if (plain && inexact && Math.abs(v - field.ans) <= 0.01 * Math.abs(field.ans)) return 'approx';
+  return 'bad';
+}
+
+if (typeof module !== 'undefined') module.exports = { BANK, generate, checkField, parseNum, normalize, figSVG, txt, T, rx, rt, R };
+</script>
+
+<script>
+/* ====== Interfejs ====== */
+(function () {
+  const $ = id => document.getElementById(id);
+  const STORE = 'planimetria-e8-v1', TOPICS = ['K', 'T', 'P', 'C', 'O'];
+  const state = { topic: 'K', level: 1, task: null, counted: false, wrongs: 0, hintsShown: 0, choice: null, tf: null, lastKey: null, lastInput: null };
+  let stats = { cells: {}, streak: 0 };
+  try { const s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s && s.cells) stats = s; if (s && s.topic) state.topic = s.topic; if (s && s.level) state.level = s.level; } catch (e) {}
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(Object.assign({}, stats, { topic: state.topic, level: state.level }))); } catch (e) {} }
+
+  function typeset(el) { const mj = window.MathJax; if (mj && mj.typesetPromise) return mj.typesetPromise([el]).catch(() => {}); }
+  function setMath(el, html) {
+    const mj = window.MathJax;
+    if (mj && mj.typesetClear) { try { mj.typesetClear([el]); } catch (e) {} }
+    el.innerHTML = html; typeset(el);
+  }
+  window.__typesetAll = () => typeset(document.body);
+
+  /* ---------- ściąga ---------- */
+  const r = String.raw;
+  const FORM = {
+    K: [['rodzaje kątów', r`ostry \(< 90^\circ\), prosty \(= 90^\circ\), rozwarty — między \(90^\circ\) a \(180^\circ\), półpełny \(= 180^\circ\), pełny \(= 360^\circ\)`],
+        ['kąty przyległe', r`\(\alpha + \beta = 180^\circ\)`], ['kąty wierzchołkowe', r`mają równe miary`],
+        ['proste równoległe przecięte trzecią prostą', r`kąty odpowiadające są równe, kąty naprzemianległe są równe`],
+        ['dwusieczna kąta', r`dzieli kąt na dwa równe kąty`],
+        ['zegar', r`między sąsiednimi liczbami \(360^\circ : 12 = 30^\circ\)<br>minutowa: \(6^\circ\) na minutę, godzinowa: \(0{,}5^\circ\) na minutę`]],
+    T: [['suma kątów trójkąta', r`\(\alpha + \beta + \gamma = 180^\circ\)`], ['kąt zewnętrzny', r`jest równy sumie dwóch kątów wewnętrznych do niego nieprzyległych`],
+        ['trójkąt równoramienny', r`kąty przy podstawie są równe`], ['nierówność trójkąta', r`najdłuższy bok \(<\) suma dwóch pozostałych`],
+        ['pole trójkąta', r`\(P = \tfrac12\cdot a\cdot h\)<br>prostokątny: \(P = \tfrac12\cdot a\cdot b\)`]],
+    P: [['twierdzenie Pitagorasa', r`\(a^2 + b^2 = c^2\) (\(c\) — przeciwprostokątna)`], ['przekątna kwadratu', r`\(d = a\sqrt2\)`],
+        ['trójkąt równoboczny', r`\(h = \dfrac{a\sqrt3}{2},\qquad P = \dfrac{a^2\sqrt3}{4}\)`],
+        ['trójkąt 45°, 45°, 90°', r`boki: \(a,\ a,\ a\sqrt2\)`], ['trójkąt 30°, 60°, 90°', r`boki: \(a,\ a\sqrt3,\ 2a\)`],
+        ['odcinek w układzie współrzędnych', r`\(|AB|^2 = (x_B - x_A)^2 + (y_B - y_A)^2\)<br>środek: \(\left(\dfrac{x_A + x_B}{2},\ \dfrac{y_A + y_B}{2}\right)\)`]],
+    C: [['prostokąt i kwadrat', r`\(P = a\cdot b,\qquad P = a^2\)`], ['równoległobok', r`\(P = a\cdot h\)<br>kąty przy jednym boku: \(\alpha + \beta = 180^\circ\)`],
+        ['romb', r`\(P = \dfrac{e\cdot f}{2} = a\cdot h\)<br>przekątne prostopadłe, dzielą się na połowy`], ['trapez', r`\(P = \dfrac{a + b}{2}\cdot h\)`],
+        ['kąty wielokąta', r`czworokąt: \(360^\circ\), \(n\)-kąt: \((n - 2)\cdot 180^\circ\)`], ['sześciokąt foremny', r`6 trójkątów równobocznych: \(P = 6\cdot\dfrac{a^2\sqrt3}{4}\)`],
+        ['jednostki pola', r`\(1\ \text{a} = 100\ \text{m}^2\), \(1\ \text{ha} = 10\,000\ \text{m}^2\)<br>\(1\ \text{m}^2 = 10\,000\ \text{cm}^2\)`]],
+    O: [['średnica', r`\(d = 2r\)`], ['długość okręgu', r`\(L = 2\pi r = \pi d\)`], ['pole koła', r`\(P = \pi r^2\)`],
+        ['pierścień kołowy', r`\(P = \pi R^2 - \pi r^2\)`], ['przybliżenia', r`\(\pi \approx 3{,}14 \approx \dfrac{22}{7}\)`]]
+  };
+  function renderFormulas() {
+    const topics = state.topic === 'X' ? TOPICS : [state.topic];
+    setMath($('formulas'), topics.map(tp => (topics.length > 1 ? `<h4 style="color:var(--accent)">${TOPIC_NAME[tp]}</h4>` : '') +
+      FORM[tp].map(([h, f]) => `<div><h4>${h}</h4><div class="f">${f}</div></div>`).join('')).join(''));
+  }
+
+  /* ---------- postęp ---------- */
+  const ROW = { K: 'Kąty', T: 'Trójkąty', P: 'Pitagoras', C: 'Czworokąty', O: 'Koło i okrąg' };
+  function renderProgress() {
+    let ok = 0, all = 0, h = '<thead><tr><th></th><th class="c">Łatwy</th><th class="c">Średni</th><th class="c">Trudny</th></tr></thead><tbody>';
+    TOPICS.forEach(tp => {
+      h += `<tr><td>${ROW[tp]}</td>`;
+      [1, 2, 3].forEach(lv => {
+        const c = stats.cells[tp + lv] || { ok: 0, all: 0 }; ok += c.ok; all += c.all;
+        h += c.all ? `<td class="c"><div class="cell">${c.ok}/${c.all}<span class="bar"><i style="width:${Math.round(100 * c.ok / c.all)}%"></i></span></div></td>` : '<td class="c"><div class="cell none">–</div></td>';
+      });
+      h += '</tr>';
+    });
+    $('progress').innerHTML = h + '</tbody>';
+    $('t-ok').textContent = ok; $('t-all').textContent = all; $('t-streak').textContent = stats.streak || 0;
+  }
+  function record(firstTryOk) {
+    if (state.counted) return; state.counted = true;
+    const key = state.task.topic + state.task.level, c = stats.cells[key] || (stats.cells[key] = { ok: 0, all: 0 });
+    c.all++; if (firstTryOk) { c.ok++; stats.streak = (stats.streak || 0) + 1; } else stats.streak = 0;
+    save(); renderProgress();
+  }
+
+  /* ---------- zadanie ---------- */
+  function newTask() {
+    const tk = generate(state.topic, state.level, state.lastKey);
+    Object.assign(state, { task: tk, lastKey: tk.key, counted: false, wrongs: 0, hintsShown: 0, choice: null, tf: tk.tf ? tk.tf.map(() => null) : null, lastInput: null });
+    const sheet = $('sheet'); sheet.classList.remove('enter'); void sheet.offsetWidth; sheet.classList.add('enter');
+    $('eyebrow').innerHTML = `<span class="chip">${TOPIC_NAME[tk.topic]}</span><span class="chip l${tk.level}">${LEVEL_NAME[tk.level]}</span><span>${tk.skill}</span>`;
+    setMath($('prompt'), tk.text);
+    if (tk.fig) { $('fig').innerHTML = '<p class="cap">Rysunek pomocniczy</p>' + figSVG(tk.fig, false); $('fig').hidden = false; } else { $('fig').innerHTML = ''; $('fig').hidden = true; }
+    let a;
+    if (tk.tf) {
+      a = '<div class="tf" role="group" aria-label="Oceń zdania">' + tk.tf.map((q, i) => `<div class="tfrow" id="tr${i}"><span>${q.s}</span><span class="tfb"><button type="button" class="tfbtn" data-i="${i}" data-v="1" aria-pressed="false" aria-label="Prawda">P</button><button type="button" class="tfbtn" data-i="${i}" data-v="0" aria-pressed="false" aria-label="Fałsz">F</button></span><span class="tick" aria-hidden="true"></span></div>`).join('') + '</div>';
+    } else if (tk.choices) {
+      a = '<div class="choices" role="group" aria-label="Wybierz odpowiedź">' + tk.choices.map((c, i) => `<button type="button" class="choice" id="ch${i}" data-i="${i}" aria-pressed="false">${'ABCD'[i]}. ${c}</button>`).join('') + '</div>';
+    } else {
+      a = '<div class="fields">' + tk.fields.map((f, i) => `<label class="field" id="fw${i}"><span class="flabel">${f.label}</span><input id="f${i}" type="text" inputmode="text" spellcheck="false" autocapitalize="off" aria-label="Odpowiedź ${i + 1}">${f.unit ? `<span class="unit">${f.unit}</span>` : ''}<span class="tick" aria-hidden="true"></span></label>`).join('') + '</div>';
+      const deg = tk.fields.every(f => f.unit === '°'), keys = !deg && (['P', 'C', 'O'].includes(tk.topic) || tk.fields.some(f => /[√π]/.test(f.show)));
+      if (keys) a += '<div class="keys"><span class="klab">Wstaw:</span><button type="button" class="key" data-ins="√" aria-label="Wstaw pierwiastek">√</button><button type="button" class="key" data-ins="π" aria-label="Wstaw pi">π</button><button type="button" class="key" data-ins="/" aria-label="Wstaw kreskę ułamkową">/</button></div>';
+      a += `<p class="inputhelp">${tk.help || (deg ? 'Wpisz samą liczbę stopni, np. 65 albo 7,5.' : keys ? 'Liczbę dziesiętną wpisz z przecinkiem, np. 4,5. Pierwiastek: przycisk √ albo sqrt, np. 2√3. Ułamek: 3/4.' : 'Liczbę dziesiętną wpisz z przecinkiem, np. 4,5. Ułamek: 3/4.')}</p>`;
+    }
+    setMath($('answer-area'), a);
+    $('feedback').hidden = true; $('hints').innerHTML = ''; $('solution').hidden = true; $('solfig').hidden = true;
+    $('btn-hint').disabled = !tk.hints.length; $('btn-hint').textContent = 'Podpowiedź';
+    const area = $('answer-area');
+    if (tk.tf) area.querySelectorAll('.tfbtn').forEach(b => b.addEventListener('click', () => {
+      const i = +b.dataset.i, row = $('tr' + i); state.tf[i] = b.dataset.v === '1';
+      row.querySelectorAll('.tfbtn').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      row.classList.remove('ok', 'bad'); row.querySelector('.tick').textContent = '';
+    }));
+    else if (tk.choices) area.querySelectorAll('.choice').forEach(b => b.addEventListener('click', () => {
+      state.choice = +b.dataset.i;
+      area.querySelectorAll('.choice').forEach(x => { x.setAttribute('aria-pressed', String(x === b)); x.classList.remove('ok', 'bad'); });
+    }));
+    else {
+      area.querySelectorAll('input').forEach(inp => inp.addEventListener('focus', () => { state.lastInput = inp; }));
+      area.querySelectorAll('.key').forEach(k => {
+        k.addEventListener('mousedown', e => e.preventDefault());
+        k.addEventListener('click', () => {
+          const inp = state.lastInput || $('f0'); if (!inp) return;
+          const s = inp.selectionStart ?? inp.value.length, e = inp.selectionEnd ?? inp.value.length;
+          inp.setRangeText(k.dataset.ins, s, e, 'end'); inp.focus();
+        });
+      });
+      const f0 = $('f0'); if (f0 && window.matchMedia('(pointer:fine)').matches) f0.focus({ preventScroll: true });
+    }
+  }
+
+  function feedback(kind, html) { const fb = $('feedback'); fb.className = 'feedback ' + kind; fb.hidden = false; setMath(fb, html); }
+
+  function check() {
+    const tk = state.task; if (!tk) return;
+    if (tk.tf) {
+      if (state.tf.some(x => x === null)) { feedback('info', 'Oceń każde zdanie: wybierz P albo F.'); return; }
+      const res = tk.tf.map((q, i) => q.v === state.tf[i]);
+      res.forEach((ok, i) => { const r = $('tr' + i); r.classList.remove('ok', 'bad'); r.classList.add(ok ? 'ok' : 'bad'); r.querySelector('.tick').textContent = ok ? '✓' : '✗'; });
+      if (res.every(Boolean)) { record(state.wrongs === 0); feedback('ok', (state.wrongs === 0 ? 'Dobrze, za pierwszym razem!' : 'Dobrze!') + ' <span>Zobacz uzasadnienie w rozwiązaniu.</span>'); showSolution(false); }
+      else { state.wrongs++; record(false); feedback('bad', `Dobrze ${res.filter(Boolean).length} z ${res.length}. <span>Popraw zdania zaznaczone na czerwono (✗) albo zajrzyj do podpowiedzi.</span>`); }
+      return;
+    }
+    if (tk.choices) {
+      if (state.choice === null) { feedback('info', 'Najpierw wybierz jedną z odpowiedzi.'); return; }
+      const ok = state.choice === tk.ans; $('ch' + state.choice).classList.add(ok ? 'ok' : 'bad');
+      if (ok) { record(state.wrongs === 0); feedback('ok', 'Dobrze! <span>Zobacz, jak to uzasadnić.</span>'); showSolution(false); }
+      else { state.wrongs++; record(false); feedback('bad', 'To nie ta odpowiedź. <span>Weź podpowiedź albo spróbuj jeszcze raz.</span>'); }
+      return;
+    }
+    const res = tk.fields.map((f, i) => checkField(f, $('f' + i).value));
+    const mark = (i, cls, sym) => { const w = $('fw' + i); w.classList.remove('ok', 'bad', 'approx'); if (cls) w.classList.add(cls); w.querySelector('.tick').textContent = sym; };
+    if (res.every(x => x === 'empty')) { feedback('info', 'Wpisz odpowiedź w puste pole.'); return; }
+    if (res.includes('invalid')) {
+      res.forEach((x, i) => mark(i, x === 'invalid' ? 'bad' : '', x === 'invalid' ? '?' : ''));
+      feedback('info', 'Nie rozumiem zapisu w zaznaczonym polu. <span>Wpisz liczbę, np. −12, 4,5, 3/4, 2√3 albo 12π.</span>'); return;
+    }
+    res.forEach((x, i) => mark(i, x === 'ok' ? 'ok' : x === 'approx' ? 'approx' : 'bad', x === 'ok' ? '✓' : x === 'approx' ? '≈' : '✗'));
+    if (res.every(x => x === 'ok')) {
+      record(state.wrongs === 0);
+      feedback('ok', (state.wrongs === 0 ? 'Dobrze, za pierwszym razem!' : 'Dobrze!') + ' <span>Porównaj swój sposób z rozwiązaniem.</span>');
+      showSolution(false); return;
+    }
+    if (res.includes('approx') && !res.some(x => x === 'bad' || x === 'empty')) {
+      const pi = tk.fields.some((f, i) => res[i] === 'approx' && f.pi != null);
+      feedback('info', pi ? 'Prawie! <span>W polu oznaczonym ≈ użyj przybliżenia π ≈ 3,14 — tak jak w treści zadania.</span>' : 'Prawie! <span>W polu oznaczonym ≈ jest przybliżenie. Podaj dokładny wynik — z pierwiastkiem, π albo jako ułamek.</span>'); return;
+    }
+    state.wrongs++; record(false);
+    const nOk = res.filter(x => x === 'ok').length;
+    const more = state.wrongs >= 2 ? ' Możesz też zobaczyć pełne rozwiązanie.' : (tk.hints.length > state.hintsShown ? ' Spróbuj z podpowiedzią.' : '');
+    feedback('bad', (nOk ? `Częściowo: ${nOk} z ${res.length} dobrze.` : 'Jeszcze nie.') + ` <span>Popraw pola oznaczone ✗.${more}</span>`);
+  }
+
+  function hint() {
+    const tk = state.task; if (!tk || state.hintsShown >= tk.hints.length) return;
+    const i = state.hintsShown++, d = document.createElement('div'); d.className = 'hint';
+    $('hints').appendChild(d); setMath(d, `<b>Podpowiedź ${i + 1}${tk.hints.length > 1 ? '/' + tk.hints.length : ''}</b>${tk.hints[i]}`);
+    $('btn-hint').disabled = state.hintsShown >= tk.hints.length;
+    if (state.hintsShown < tk.hints.length) $('btn-hint').textContent = 'Kolejna podpowiedź';
+  }
+
+  function hasSol(fg) { return ['lens', 'angs', 'txt'].some(k => (fg[k] || []).some(g => g.sol != null || g.so)) || (fg.segs || []).some(g => (g[2] || '').includes('s')); }
+  function showSolution(manual) {
+    const tk = state.task; if (!tk) return;
+    if (manual) { record(false); if ($('feedback').hidden || !$('feedback').classList.contains('ok')) feedback('info', 'Przeczytaj rozwiązanie, a potem spróbuj podobnego zadania.'); }
+    setMath($('steps'), tk.steps.map(s => `<li>${s}</li>`).join(''));
+    setMath($('final'), `<span class="lab">Odpowiedź:</span>${tk.answer}`);
+    if (tk.fig && hasSol(tk.fig)) { $('solfig').innerHTML = '<p class="cap">Rysunek z wynikami</p>' + figSVG(tk.fig, true); $('solfig').hidden = false; } else $('solfig').hidden = true;
+    $('solution').hidden = false;
+    if (manual) $('solution').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ---------- przełączniki ---------- */
+  function syncControls() {
+    document.querySelectorAll('#topic-seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.topic === state.topic)));
+    document.querySelectorAll('#level-seg button').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.level === state.level)));
+  }
+  document.querySelectorAll('#topic-seg button').forEach(b => b.addEventListener('click', () => { state.topic = b.dataset.topic; save(); syncControls(); renderFormulas(); newTask(); }));
+  document.querySelectorAll('#level-seg button').forEach(b => b.addEventListener('click', () => { state.level = +b.dataset.level; save(); syncControls(); newTask(); }));
+  $('answer-form').addEventListener('submit', e => { e.preventDefault(); check(); });
+  $('btn-hint').addEventListener('click', hint);
+  $('btn-solve').addEventListener('click', () => showSolution(true));
+  $('btn-next').addEventListener('click', newTask);
+
+  function resetUI() {
+    const area = $('reset-area');
+    area.innerHTML = '<span>Na pewno wyzerować cały postęp?</span><button type="button" class="linkbtn danger" id="r-yes">Tak, wyzeruj</button><button type="button" class="linkbtn" id="r-no">Anuluj</button>';
+    $('r-yes').onclick = () => { stats = { cells: {}, streak: 0 }; save(); renderProgress(); restore(); };
+    $('r-no').onclick = restore;
+    function restore() { area.innerHTML = '<button type="button" class="linkbtn" id="btn-reset">Wyzeruj postęp</button>'; $('btn-reset').onclick = resetUI; }
+  }
+  $('btn-reset').onclick = resetUI;
+
+  if (!BANK[state.topic] && state.topic !== 'X') state.topic = 'K';
+  syncControls(); renderFormulas(); renderProgress(); newTask();
+})();
+</script>
+</body>
+</html>
